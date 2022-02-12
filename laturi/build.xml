@@ -4,7 +4,7 @@
     <!--ANT 1.7 is required                                        -->
     <!--define folder properties-->
     <property name="dir.buildfile" value="."/>
-    <property name="dir.workspace" value="C:/kurssit/ohj2/ws"/>
+    <property name="dir.workspace" value="C:/kurssit/ohj2/ws2"/>
     <property name="dir.jarfile" value="${dir.buildfile}"/>
     <target name="create_run_jar">
         <jar destfile="${dir.jarfile}/laturi.jar" filesetmanifest="mergewithoutmain">
@@ -12,7 +12,7 @@
                 <attribute name="Main-Class" value="fxLaturi.LaturiMain"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
-            <fileset dir="C:/kurssit/ohj2/laturi/bin"/>
+            <fileset dir="C:/kurssit/ohj2/ht/laturi/bin"/>
             
             
         </jar>

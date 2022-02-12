@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="295.0" prefWidth="468.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxLaturi.LaturinTietojaController">
+   <center>
+      <VBox alignment="CENTER" style="-fx-background-color: #ffff99;" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" prefHeight="50.0" text="LATAUSSEURANTA">
+               <font>
+                  <Font name="Arial Bold" size="24.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Versio 1.0" />
+            <Label alignment="BOTTOM_CENTER" maxWidth="1.7976931348623157E308" prefHeight="40.0" text="Petri Lammi">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+   </center>
+   <bottom>
+      <VBox BorderPane.alignment="CENTER" />
+   </bottom>
+</BorderPane>

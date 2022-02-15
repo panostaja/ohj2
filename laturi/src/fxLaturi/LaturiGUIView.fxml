@@ -134,7 +134,7 @@
                               <Label text="Haltija" GridPane.rowIndex="5" />
                               <Label text="Puhelinnumero" GridPane.rowIndex="6" />
                               <Label text="email" GridPane.rowIndex="7" />
-                              <TextField text="ABC-123" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+                              <TextField onMouseClicked="#handelVanhaAjoneuvo" text="ABC-123" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
                               <TextField text="Seat" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
                               <TextField text="Mii" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
                               <TextField text="36.8" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />

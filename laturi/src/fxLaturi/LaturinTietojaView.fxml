@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="295.0" prefWidth="468.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxLaturi.LaturinTietojaController">
+<BorderPane prefHeight="295.0" prefWidth="468.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fi.jyu.mit.fxgui.ModalController">
    <center>
       <VBox alignment="CENTER" style="-fx-background-color: #ffff99;" BorderPane.alignment="CENTER">
          <children>
@@ -27,3 +27,5 @@
       <VBox BorderPane.alignment="CENTER" />
    </bottom>
 </BorderPane>
+
+    

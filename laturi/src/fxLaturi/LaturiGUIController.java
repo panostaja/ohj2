@@ -2,6 +2,11 @@ package fxLaturi;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import fi.jyu.mit.fxgui.*;
@@ -9,7 +14,7 @@ import fi.jyu.mit.fxgui.*;
 /**
  * Luokka laturin käyttöliittymän tapahtumien hoitamiseksi.
  * @author plammi
- * @version 12.2.2022
+ * @version 15.2.2022
  */
 public class LaturiGUIController implements Initializable {
 
@@ -34,7 +39,16 @@ public class LaturiGUIController implements Initializable {
      * Avaa webselaimeen avustussivuston
      */
     public void webohje() {
-        Dialogs.showMessageDialog("Ei osata vielä avata ohjeita");
+        Desktop desktop = Desktop.getDesktop();
+        try {
+            URI uri = new URI("http:www.google.com");
+            desktop.browse(uri);
+        } catch (URISyntaxException e) {
+            return;
+        } catch (IOException e) {
+            return;
+        }
+
     }
    
    /**
@@ -55,7 +69,14 @@ public class LaturiGUIController implements Initializable {
      * Käsitellään uuden ajoneuvon lisääminen
      */
     @FXML private void handleUusiAjoneuvo() {
-        Dialogs.showMessageDialog("Ei osata vielä lisätä");
+        ModalController.showModal(LaturiGUIController.class.getResource("UusiAjoneuvoGUIView.fxml"), "Ajoneuvo", null, "");;
+    }
+    
+    /**
+     * Käsitellään vanhan ajoneuvon tietojen esittäminen
+     */
+    @FXML private void handelVanhaAjoneuvo() {
+        ModalController.showModal(LaturiGUIController.class.getResource("VanhaAjoneuvoGUIView.fxml"), "Ajoneuvo", null, "");;
     }
     
     /**
@@ -117,6 +138,8 @@ public class LaturiGUIController implements Initializable {
         Dialogs.showMessageDialog("Ei osata vielä näyttää raporttia ajoneuvosta");
     }
     
+    
+    
     /**
      * Ohjeet
      */
@@ -125,11 +148,12 @@ public class LaturiGUIController implements Initializable {
             }
     
     /**
-     * Tulostus
+     * Käsitellään vanhan ajoneuvon tietojen esittäminen
      */
     @FXML private void handleTietoja() {
-        Dialogs.showMessageDialog("Ei osata vielä näyttää tietoja");
-   }
+        ModalController.showModal(LaturiGUIController.class.getResource("LaturinTietojaView.fxml"), "Ajoneuvo", null, "");;
+    }
+    
     
 
 }

@@ -58,7 +58,7 @@
    <left>
       <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <center>
-            <ListChooser rivit="ABC-123&#10;VAU-456&#10;BBB-888&#10;&#10;&#10;&#10;&#10;" BorderPane.alignment="CENTER" />
+            <ListChooser fx:id="chooserAjoneuvot" rivit="ABC-123&#10;VAU-456&#10;BBB-888&#10;&#10;&#10;&#10;&#10;" BorderPane.alignment="CENTER" />
          </center>
          <top>
             <VBox BorderPane.alignment="CENTER">
@@ -105,7 +105,7 @@
                   <Label text="Ajoneuvon tiedot" BorderPane.alignment="CENTER" />
                </top>
                <center>
-                  <ScrollPane fitToWidth="true" BorderPane.alignment="CENTER">
+                  <ScrollPane fx:id="panelAjoneuvo" fitToWidth="true" BorderPane.alignment="CENTER">
                      <content>
                         <GridPane hgap="10.0">
                           <columnConstraints>

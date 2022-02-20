@@ -3,6 +3,7 @@ package fxLaturi;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import laturi.Laturi;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.fxml.FXMLLoader;
@@ -25,6 +26,9 @@ public class LaturiMain extends Application {
             scene.getStylesheets().add(getClass().getResource("laturi.css").toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.setTitle("Laturi");
+            Laturi laturi = new Laturi();
+            laturiCtrl.setLaturi(laturi);
+            
             primaryStage.show();
             if (!laturiCtrl.avaa()) Platform.exit();
         } catch(Exception e) {

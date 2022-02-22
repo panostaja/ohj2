@@ -28,7 +28,7 @@ public class Laturi {
      * @example
      * <pre name="test">
      * #THROWS SailoException
-     * Kerho laturi = new Kerho();
+     * Laturi laturi = new Laturi();
      * Ajoneuvo auto1 = new Ajoneuvo(), auto2 = new Ajoneuvo();
      * auto1.rekisteroi(); auto2.rekisteroi();
      * laturi.getAjoneuvoja() === 0;

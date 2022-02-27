@@ -1,5 +1,6 @@
 package kanta;
 
+
 /**
  * Tarkistaa rekisteritunnusksen syöttömuodon oikeellisuuden
  * Tämä on vasta placeholder, johon kerätty ajatuksia ja mahdollisia koodirakenteita hyödynnettäväksi

@@ -1,5 +1,6 @@
 package laturi;
 
+
 /**
  * Tietorakenteen poikkeusluokka
  * @author panos

@@ -1,5 +1,7 @@
 package laturi;
 
+import java.util.List;
+
 /**
  * |------------------------------------------------------------------------|
  * | Luokan nimi:   Laturi                              | Avustajat:        |
@@ -20,6 +22,7 @@ package laturi;
 public class Laturi {
 
     private final Ajoneuvot ajoneuvot = new Ajoneuvot();
+    private final Lataukset lataukset = new Lataukset(); 
     
     /**
      * Lisää Laturiin uuden ajoneuvon
@@ -51,6 +54,18 @@ public class Laturi {
         
     }
     
+    
+    /**
+     * Listään uusi lataus laturiin
+     * @param lat lisättävä lataus 
+     */
+    public void lisaa(Lataus lat) {
+        lataukset.lisaa(lat);
+    }
+
+
+    
+    
     /**
      * Palautaa Laturiin rekisteröidyn ajoneuvomäärä
      * @return ajoneuvojen määrä
@@ -71,6 +86,46 @@ public class Laturi {
         return ajoneuvot.anna(i);
     }
 
+    /**
+     * Haetaan kaikki ajoneuvon lataukset
+     * @param ajoneuvo ajoneuvo jolle latauksia haetaan
+     * @return tietorakenne jossa viiteet löydetteyihin latauksiin
+     * @example
+     * <pre name="test">
+     * #import java.util.*;
+     * 
+     *  Laturi laturi = new Laturi();
+     *  Ajoneuvo auto1 = new Ajoneuvo(), auto2 = new Ajoneuvo(), auto3 = new Ajoneuvo();
+     *  auto1.rekisteroi(); auto2.rekisteroi(); auto3.rekisteroi();
+     *  int id1 = auto1.getTunnusNro();
+     *  int id2 = auto2.getTunnusNro();
+     *  Lataus kerta11 = new Lataus(id1); laturi.lisaa(kerta11);
+     *  Lataus kerta12 = new Lataus(id1); laturi.lisaa(kerta12);
+     *  Lataus kerta21 = new Lataus(id2); laturi.lisaa(kerta21);
+     *  Lataus kerta22 = new Lataus(id2); laturi.lisaa(kerta22);
+     *  Lataus kerta23 = new Lataus(id2); laturi.lisaa(kerta23);
+     *  
+     *  List<Lataus> loytyneet;
+     *  loytyneet = laturi.annaLataukset(auto3);
+     *  loytyneet.size() === 0; 
+     *  loytyneet = laturi.annaLataukset(auto1);
+     *  loytyneet.size() === 2; 
+     *  loytyneet.get(0) == kerta11 === true;
+     *  loytyneet.get(1) == kerta12 === true;
+     *  loytyneet = laturi.annaLataukset(auto2);
+     *  loytyneet.size() === 3; 
+     *  loytyneet.get(0) == kerta21 === true;
+     *  
+     *  
+     *  
+     *  
+     * </pre> 
+     */
+    public List<Lataus> annaLataukset(Ajoneuvo ajoneuvo) {
+        return lataukset.annaLataukset(ajoneuvo.getTunnusNro());
+    }
+
+    
     
     /**
      * @param args ei käytössä 

@@ -1,4 +1,5 @@
 package fxLaturi;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -6,6 +7,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Font;
 import laturi.Ajoneuvo;
+import laturi.Lataus;
 import laturi.Laturi;
 import laturi.SailoException;
 
@@ -17,6 +19,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import fi.jyu.mit.fxgui.*;
+import java.util.List; 
 
 /**
  * Luokka laturin käyttöliittymän tapahtumien hoitamiseksi.
@@ -74,7 +77,8 @@ public class LaturiGUIController implements Initializable {
     * Käsitellään uuden lataksen lisääminen
     */
    @FXML private void handleUusiLataus() {
-       Dialogs.showMessageDialog("Ei osata vielä lisätä");
+      // Dialogs.showMessageDialog("Ei osata vielä lisätä");
+      uusiLataus();
    }
     
     /**
@@ -171,6 +175,7 @@ public class LaturiGUIController implements Initializable {
  // Tästä eteenpäin ei käyttöliittymään suoraan liittyvää koodia    
 
     private Laturi laturi;
+    private Ajoneuvo ajoneuvoKohdalla;
     
     private TextArea areaAjoneuvo = new TextArea(); // TODO: poista tämä lopuksi
     
@@ -200,7 +205,20 @@ public class LaturiGUIController implements Initializable {
         hae(uusi.getTunnusNro());
     }
     
+    /** 
+     * Tekee uuden tyhjän latauksen editointia varten 
+     */ 
+    public void uusiLataus() { 
+        if ( ajoneuvoKohdalla == null ) return;  
+        Lataus lat = new Lataus();  
+        lat.rekisteroi();  
+        lat.taytaLatausTiedoilla(ajoneuvoKohdalla.getTunnusNro());  
+        laturi.lisaa(lat);  
+        hae(ajoneuvoKohdalla.getTunnusNro());          
+    } 
 
+    
+    
     /**
      * Hakee ajoneuvojen tiedot listaan
      * @param anro ajoneuvon numero, joka aktivoidaan haun jälkeen
@@ -220,18 +238,25 @@ public class LaturiGUIController implements Initializable {
     /**
      * Näyttää listasta valitun ajoneuvon tiedot, tilapäisesti yhteen isoon edit-kenttään
      */
-    protected void naytaAjoneuvo() {
-        Ajoneuvo ajoneuvoKohdalla = chooserAjoneuvot.getSelectedObject();
+    private void naytaAjoneuvo() {
+        ajoneuvoKohdalla = chooserAjoneuvot.getSelectedObject();
 
         if (ajoneuvoKohdalla == null) return;
 
         areaAjoneuvo.setText("");
         try (PrintStream os = TextAreaOutputStream.getTextPrintStream(areaAjoneuvo)) {
-            ajoneuvoKohdalla.tulosta(os);
+           // ajoneuvoKohdalla.tulosta(os);
+           tulosta(os, ajoneuvoKohdalla);
         }
     }
 
-    
+    private void tulosta(PrintStream os, Ajoneuvo ajoneuvo) {
+        os.println("---------------------------------------------------");
+        ajoneuvo.tulosta(os);
+        List<Lataus> lataukset = laturi.annaLataukset(ajoneuvo);
+        for (Lataus lat: lataukset) 
+            lat.tulosta(os);
+    }
     
     /**
      * Asetetaan käytettävä laturi

@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Luokka laturin käyttöliittymän tapahtumien hoitamiseksi.
  * @author plammi
- * @version 15.2.2022
+ * @version 1.3.2022
  */
 public class LaturiGUIController implements Initializable {
     
@@ -124,7 +124,8 @@ public class LaturiGUIController implements Initializable {
      * Tulostus
      */
     @FXML private void handleTulosta() {
-        Dialogs.showMessageDialog("Ei osata vielä tulostaa");
+        TulostusController tulostusCtrl = TulostusController.tulosta(null); 
+        tulostaValitut(tulostusCtrl.getTextArea()); 
     }
     
     /**
@@ -269,5 +270,20 @@ public class LaturiGUIController implements Initializable {
     }
     
     
+    /**
+     * Tulostaa listassa olevat ajoneuvot tekstialueeseen
+     * @param text alue johon tulostetaan
+     */
+    public void tulostaValitut(TextArea text) {
+        try (PrintStream os = TextAreaOutputStream.getTextPrintStream(text)) {
+            os.println("Tulostetaan kaikki ajoneuvot");
+            for (int i = 0; i < laturi.getAjoneuvoja(); i++) {
+                Ajoneuvo ajoneuvo = laturi.annaAjoneuvo(i);
+                tulosta(os, ajoneuvo);
+                os.println("\n\n");
+            }
+        }
+    }
+
 
 }

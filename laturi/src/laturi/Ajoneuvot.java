@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -39,7 +40,6 @@ public class Ajoneuvot {
     /**
      * Lisää uuden jäsenen tietorakenteeseen.  Ottaa jäsenen omistukseensa.
      * @param ajoneuvo lisätäävän ajoneuvon viite.  Huom tietorakenne muuttuu omistajaksi
-     * @throws SailoException jos tietorakenne on jo täynnä
      * @example
      * <pre name="test">
      * #THROWS SailoException 
@@ -57,11 +57,10 @@ public class Ajoneuvot {
      * ajoneuvot.anna(3) === auto1; #THROWS IndexOutOfBoundsException 
      * ajoneuvot.lisaa(auto1); ajoneuvot.getLkm() === 4;
      * ajoneuvot.lisaa(auto1); ajoneuvot.getLkm() === 5;
-     * ajoneuvot.lisaa(auto1);  #THROWS SailoException
      * </pre>
      */
-    public void lisaa(Ajoneuvo ajoneuvo) throws SailoException {
-        if (lkm >= alkiot.length) throw new SailoException("Liikaa alkioita");
+    public void lisaa(Ajoneuvo ajoneuvo)  {
+        if (lkm >= alkiot.length) alkiot = Arrays.copyOf(alkiot, lkm+20);
         this.alkiot[this.lkm] = ajoneuvo;
         lkm++;
     }
@@ -157,12 +156,10 @@ public class Ajoneuvot {
         auto2.rekisteroi();
         auto2.taytaTiedoilla();
         
-        try {
+
             ajoneuvot.lisaa(auto);
             ajoneuvot.lisaa(auto2);
-        } catch (SailoException e) {
-            System.err.println(e.getMessage());
-        }
+
        
         
         for (int i = 0; i < ajoneuvot.getLkm(); i++) {

@@ -65,8 +65,8 @@
             <VBox BorderPane.alignment="CENTER">
                <children>
                   <Label alignment="CENTER" maxWidth="200.0" text="Haku" />
-                  <ComboBoxChooser rivit="Rekisteritunnus&#10;Merkki&#10;Malli&#10;Haltija" />
-                  <TextField />
+                  <ComboBoxChooser fx:id="cbKentat" onAction="#handleHakuehto" rivit="Rekisteritunnus&#10;Merkki&#10;Malli&#10;Haltija" />
+                  <TextField fx:id="hakuehto" onKeyReleased="#handleHakuehto" />
                   <Label alignment="CENTER" maxWidth="200.0" text="Ajoneuvot" />
                </children>
             </VBox>
@@ -101,7 +101,7 @@
    <center>
       <SplitPane dividerPositions="0.5017985611510791" BorderPane.alignment="CENTER">
          <items>
-            <BorderPane maxWidth="500.0" minWidth="138.0" prefWidth="350.0">
+           <BorderPane maxWidth="500.0" minWidth="138.0" prefWidth="350.0">
                <top>
                   <Label text="Ajoneuvon tiedot" BorderPane.alignment="CENTER" />
                </top>
@@ -148,6 +148,10 @@
                      </content>
                   </ScrollPane>
                </center>
+               <bottom>
+                  <Label fx:id="labelVirhe" alignment="CENTER" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER" />
+               </bottom>
+               
             </BorderPane>
             <BorderPane prefHeight="200.0" prefWidth="200.0">
                <top>

@@ -1,5 +1,11 @@
 package laturi;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.util.Scanner;
 
 /**
  * |------------------------------------------------------------------------|
@@ -80,6 +86,52 @@ public class Ajoneuvot {
         return alkiot[i];
     }
 
+    /**
+     * Lukee ajoneuvon tiedostosta.  Kesken.
+     * @param hakemisto tiedoston hakemisto
+     * @throws SailoException jos lukeminen epäonnistuu
+     */
+    public void lueTiedostosta(String hakemisto) throws SailoException {
+        String nimi = hakemisto + "/autot.dat";
+        File ftied = new File(nimi);
+        
+        try (Scanner fi = new Scanner(new FileInputStream(ftied))) { // Jotta UTF8/ISO-8859 toimii'
+            while ( fi.hasNext() ) {
+                String s = fi.nextLine();
+                if ( s == null || "".equals(s) || s.charAt(0) == ';') continue;
+                Ajoneuvo ajoneuvo = new Ajoneuvo();
+                ajoneuvo.parse(s); // kertoisi onnistumista ???
+                lisaa(ajoneuvo);
+            }
+        } catch ( FileNotFoundException e ) {
+            throw new SailoException("Ei saa luettua tiedostoa " + nimi);
+        // } catch ( IOException e ) {
+        //     throw new SailoException("Ongelmia tiedoston kanssa: " + e.getMessage());
+        }     
+    }
+
+    
+    /**
+     * Tallentaa Ajoneuvot tiedostoon.  
+     * Tiedoston muoto:
+     * <pre>
+     * 1|ABC-123|Seat|Mii|36.8|11|Mikko Mallikas|+358400123456|mikko.mallikas@mail.fi
+     * 2|VAU-456|Mercedes-Benz|EQC|80|11|Jeppe Olvi|+358509988776|joolvi@moon.fi
+     * </pre>
+     * @param hakemisto tallennettavan tiedoston hakemisto
+     * @throws SailoException jos talletus epäonnistuu
+     */
+    public void tallenna(String hakemisto) throws SailoException {
+        File ftied = new File(hakemisto + "/autot.dat");
+        try (PrintStream fo = new PrintStream(new FileOutputStream(ftied, false))) {
+           for (int i=0; i<this.getLkm(); i++) {
+               Ajoneuvo ajoneuvo = this.anna(i);
+               fo.println(ajoneuvo.toString());
+           }
+        } catch (FileNotFoundException ex)  {
+            throw new SailoException("Tiedosto " + ftied.getAbsolutePath() + " ei aukea");
+        }
+    }
     
     
     /**
@@ -88,6 +140,15 @@ public class Ajoneuvot {
      */
     public static void main(String[] args) {
         Ajoneuvot ajoneuvot = new Ajoneuvot();
+        
+        try {
+            ajoneuvot.lueTiedostosta("humppavaara");
+        } catch (SailoException ex) {
+            System.err.println(ex.getMessage());
+        }
+         
+
+        
         Ajoneuvo auto = new Ajoneuvo();
         Ajoneuvo auto2 = new Ajoneuvo();
             
@@ -110,7 +171,15 @@ public class Ajoneuvot {
             ajoneuvo.tulosta(System.out);
         }
 
-  //      
+        try {
+            ajoneuvot.tallenna("humppavaara");
+        }  catch (SailoException e) {
+            // e.printStackTrace();
+            System.err.println(e.getMessage());
+        }
+    
+
+        
     }
     
 }

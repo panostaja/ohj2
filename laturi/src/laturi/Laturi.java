@@ -1,5 +1,6 @@
 package laturi;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -21,8 +22,10 @@ import java.util.List;
  */
 public class Laturi {
 
-    private final Ajoneuvot ajoneuvot = new Ajoneuvot();
-    private final Lataukset lataukset = new Lataukset(); 
+    private  Ajoneuvot ajoneuvot = new Ajoneuvot();
+    private  Lataukset lataukset = new Lataukset(); 
+    private String hakemisto = "humppavaara";
+    
     
     /**
      * Lisää Laturiin uuden ajoneuvon
@@ -126,6 +129,44 @@ public class Laturi {
     }
 
     
+    /**
+     * Tallettaa laturin tiedot tiedostoon
+     * @throws SailoException jos tallettamisessa ongelmia
+     */
+    public void tallenna() throws SailoException {
+        String virhe = "";
+        try {
+            ajoneuvot.tallenna(hakemisto);
+        } catch ( SailoException ex ) {
+            virhe = ex.getMessage();
+        }
+
+        try {
+            lataukset.tallenna(hakemisto);
+        } catch ( SailoException ex ) {
+            virhe += ex.getMessage();
+        }
+        if ( !"".equals(virhe) ) throw new SailoException(virhe);
+    }
+
+    /**
+     * Lukee laturin tiedot tiedostosta
+     * @param nimi jota käyteään lukemisessa
+     * @throws SailoException jos lukeminen epäonnistuu
+     */
+    public void lueTiedostosta(String nimi) throws SailoException {
+        File dir = new File(nimi);
+        dir.mkdir();
+        ajoneuvot = new Ajoneuvot(); // jos luetaan olemassa olevaan niin helpoin tyhjentää näin
+        lataukset = new Lataukset();
+
+        hakemisto = nimi;
+        ajoneuvot.lueTiedostosta(nimi);
+        lataukset.lueTiedostosta(nimi);
+    }
+
+    
+    
     
     /**
      * @param args ei käytössä 
@@ -133,20 +174,22 @@ public class Laturi {
     public static void main(String[] args) {
     //
         Laturi laturi = new Laturi();
+       
         try {
+            laturi.lueTiedostosta("koehumppavaara");
+        } catch (SailoException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        
             Ajoneuvo auto = new Ajoneuvo();
             Ajoneuvo auto2 = new Ajoneuvo();
-            
             auto.rekisteroi();    
-            auto.tulosta(System.out);
             auto.taytaTiedoilla();
-            auto.tulosta(System.out);
-            
             auto2.rekisteroi();
-            auto2.tulosta(System.out);
             auto2.taytaTiedoilla();
-            auto2.tulosta(System.out);
-                        
+            
+            try {               
             laturi.lisaa(auto);
             laturi.lisaa(auto2);
             
@@ -155,6 +198,7 @@ public class Laturi {
                 System.out.println("Ajoneuvo paikassa: " + i);
                 ajoneuvo.tulosta(System.out);
             }
+            laturi.tallenna();
         } catch (SailoException e) {
               System.out.println(e.getMessage());
         }

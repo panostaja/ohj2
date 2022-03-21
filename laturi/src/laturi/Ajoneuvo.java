@@ -7,6 +7,8 @@ package laturi;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+import fi.jyu.mit.ohj2.Mjonot;
+
 /**
 *|------------------------------------------------------------------------|
 *| Luokan nimi:   Ajoneuvo                            | Avustajat:        |
@@ -57,6 +59,52 @@ public class Ajoneuvo {
                     
         }
 
+    
+    /**
+     * Selvitää ajoneuvon tiedot | erotellusta merkkijonosta
+     * Pitää huolen että seuraavaNro on suurempi kuin tuleva tunnusNro.
+     * @param rivi josta ajoneuvon tiedot otetaan
+     * 
+     * @example
+     * <pre name="test">
+     *   Ajoneuvo ajoneuvo = new Ajoneuvo();
+     *   ajoneuvo.parse("   2  |  VAU-456   | Seat |  Mii");
+     *   ajoneuvo.getTunnusNro() === 2;
+     *   ajoneuvo.toString().startsWith(2|VAU-456|Seat|") === true; // on enemmäkin kuin 3 kenttää, siksi loppu |
+     *
+     *   ajoneuvo.rekisteroi();
+     *   int n = ajoneuvo.getTunnusNro();
+     *   ajoneuvo.parse(""+(n+20));       // Otetaan merkkijonosta vain tunnusnumero
+     *   ajoneuvo.rekisteroi();           // ja tarkistetaan että seuraavalla kertaa tulee yhtä isompi
+     *   ajoneuvo.getTunnusNro() === n+20+1;
+     *     
+     * </pre>
+     */
+    public void parse(String rivi) {
+        var sb = new StringBuilder(rivi);
+        setTunnusNro(Mjonot.erota(sb, '|', getTunnusNro()));
+        rekisteriTunnus = Mjonot.erota(sb, '|', rekisteriTunnus);
+        merkki = Mjonot.erota(sb, '|', merkki);
+        malli = Mjonot.erota(sb, '|', malli);
+        akunKoko = Mjonot.erota(sb, '|', akunKoko);
+        maxACLatausTeho = Mjonot.erota(sb, '|', maxACLatausTeho);
+        haltija = Mjonot.erota(sb, '|', haltija);
+        puhelin = Mjonot.erota(sb, '|', puhelin);
+        email = Mjonot.erota(sb, '|', email);
+        
+    }
+
+    /**
+     * Asettaa tunnusnumeron ja samalla varmistaa että
+     * seuraava numero on aina suurempi kuin tähän mennessä suurin.
+     * @param nr asetettava tunnusnumero
+     */
+    private void setTunnusNro(int nr) {
+        tunnusNro = nr;
+        if (tunnusNro >= seuraavaNro) seuraavaNro = tunnusNro + 1;
+    }
+
+    
     /**
      * Tulostetaan Ajoneuvot tiedot
      * @param os tietovirta johon tulostetaan
@@ -108,6 +156,32 @@ public class Ajoneuvo {
         akunKoko = 36.8;
         maxACLatausTeho = 11;
      }
+
+    /**
+     * Palauttaa ajoneuvon tiedot merkkijonona jonka voi tallentaa tiedostoon.
+     * @return ajoneuvo tolppaeroteltuna merkkijonona 
+     * @example
+     * <pre name="test">
+     *   Ajoneuvo ajoneuvo = new Ajoneuvo();
+     *   ajoneuvo.parse("   2  |  VAU-456   |Seat |   Mii");
+     *   ajoneuvo.toString().startsWith("2|VAU-456|Seat|") === true; // on enemmäkin kuin 3 kenttää, siksi loppu |
+     * </pre>  
+     */
+    @Override
+    public String toString() {
+        return "" +
+                getTunnusNro() + "|" +
+                rekisteriTunnus + "|" +
+                merkki + "|" +
+                malli + "|" +
+                akunKoko + "|" +
+                maxACLatausTeho + "|" +
+                haltija + "|" +
+                puhelin + "|" +
+                email;
+                
+    }
+
 
     
     /**

@@ -1,5 +1,10 @@
 package laturi;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.*;
 
 
@@ -44,14 +49,27 @@ public class Lataukset implements Iterable<Lataus> {
 
 
     /**
-     * Lukee ajoneuvot tiedostosta.  
-     * TODO Kesken.
+     * Lukee ajoneuvon tiedostosta.  Kesken.
      * @param hakemisto tiedoston hakemisto
      * @throws SailoException jos lukeminen epäonnistuu
      */
     public void lueTiedostosta(String hakemisto) throws SailoException {
-        tiedostonNimi = hakemisto + ".har";
-        throw new SailoException("Ei osata vielä lukea tiedostoa " + tiedostonNimi);
+        String nimi = hakemisto + "/lataukset.dat";
+        File ftied = new File(nimi);
+        
+        try (Scanner fi = new Scanner(new FileInputStream(ftied))) { // Jotta UTF8/ISO-8859 toimii'
+            while ( fi.hasNext() ) {
+                String s = fi.nextLine().trim();
+                if ( s == null || "".equals(s) || s.charAt(0) == ';') continue;
+                Lataus lat = new Lataus();
+                lat.parse(s); // kertoisi onnistumista ???
+                lisaa(lat);
+            }
+        } catch ( FileNotFoundException e ) {
+            throw new SailoException("Ei saa luettua tiedostoa " + nimi);
+        // } catch ( IOException e ) {
+        //     throw new SailoException("Ongelmia tiedoston kanssa: " + e.getMessage());
+        }     
     }
 
 
@@ -150,6 +168,27 @@ public class Lataukset implements Iterable<Lataus> {
         return loydetyt;
     }
 
+    /**
+     * Tallentaa Ajoneuvot tiedostoon.  
+     * Tiedoston muoto:
+     * <pre>
+     * 1|ABC-123|Seat|Mii|36.8|11|Mikko Mallikas|+358400123456|mikko.mallikas@mail.fi
+     * 2|VAU-456|Mercedes-Benz|EQC|80|11|Jeppe Olvi|+358509988776|joolvi@moon.fi
+     * </pre>
+     * @param hakemisto tallennettavan tiedoston hakemisto
+     * @throws SailoException jos talletus epäonnistuu
+     */
+    public void tallenna(String hakemisto) throws SailoException {
+        File ftied = new File(hakemisto + "/lataukset.dat");
+        try (PrintStream fo = new PrintStream(new FileOutputStream(ftied, false))) {
+           for (var lat: alkiot) {
+               fo.println(lat.toString());
+           }
+        } catch (FileNotFoundException ex)  {
+            throw new SailoException("Tiedosto " + ftied.getAbsolutePath() + " ei aukea");
+        }
+    }
+    
 
     /**
      * Testiohjelma harrastuksille
@@ -157,6 +196,15 @@ public class Lataukset implements Iterable<Lataus> {
      */
     public static void main(String[] args) {
         Lataukset latausKerrat = new Lataukset();
+        
+        try {
+            latausKerrat.lueTiedostosta("humppavaara");
+        } catch (SailoException ex) {
+            System.err.println(ex.getMessage());
+        }
+         
+
+        
         Lataus kerta1 = new Lataus();
         kerta1.taytaLatausTiedoilla(2);
         Lataus kerta2 = new Lataus();
@@ -181,6 +229,13 @@ public class Lataukset implements Iterable<Lataus> {
             lat.tulosta(System.out);
         }
 
+        try {
+            latausKerrat.tallenna("humppavaara");
+        } catch (SailoException e) {
+            e.printStackTrace();
+        }        
+
+        
     }
 
 }

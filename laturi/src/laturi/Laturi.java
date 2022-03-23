@@ -48,7 +48,7 @@ public class Laturi {
      * laturi.annaAjoneuvo(3) === auto1; #THROWS IndexOutOfBoundsException 
      * laturi.lisaa(auto1); laturi.getAjoneuvoja() === 4;
      * laturi.lisaa(auto1); laturi.getAjoneuvoja() === 5;
-     * laturi.lisaa(auto1);            #THROWS SailoException
+     * 
      * </pre>
      */
 

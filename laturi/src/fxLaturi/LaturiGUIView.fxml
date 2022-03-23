@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import fi.jyu.mit.fxgui.ComboBoxChooser?>
 <?import fi.jyu.mit.fxgui.ListChooser?>
 <?import fi.jyu.mit.fxgui.StringGrid?>
@@ -36,8 +35,10 @@
           <Menu mnemonicParsing="false" text="Muokkaa">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#handleUusiLataus" text="Lisää lataus" />
-                  <MenuItem mnemonicParsing="false" onAction="#handlePoistaLataus" text="Poista lataus" />
                   <MenuItem mnemonicParsing="false" onAction="#handleUusiAjoneuvo" text="Lisää ajoneuvo" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleMuokkaaLatausta" text="Muokkaa latausta" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleMuokkaaAjoneuvoa" text="Muokkaa ajoneuvoa" />
+                  <MenuItem mnemonicParsing="false" onAction="#handlePoistaLataus" text="Poista lataus" />
                   <MenuItem mnemonicParsing="false" onAction="#handlePoistaAjoneuvo" text="Poista ajoneuvo" />
             </items>
           </Menu>
@@ -135,7 +136,7 @@
                               <Label text="Haltija" GridPane.rowIndex="5" />
                               <Label text="Puhelinnumero" GridPane.rowIndex="6" />
                               <Label text="email" GridPane.rowIndex="7" />
-                              <TextField onMouseClicked="#handelVanhaAjoneuvo" text="ABC-123" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+                              <TextField onMouseClicked="#handleVanhaAjoneuvo" text="ABC-123" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
                               <TextField text="Seat" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
                               <TextField text="Mii" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
                               <TextField text="36.8" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />

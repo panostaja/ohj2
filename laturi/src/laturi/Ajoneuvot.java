@@ -86,7 +86,7 @@ public class Ajoneuvot {
     }
 
     /**
-     * Lukee ajoneuvon tiedostosta.  Kesken.
+     * Lukee ajoneuvon tiedostosta. 
      * @param hakemisto tiedoston hakemisto
      * @throws SailoException jos lukeminen epäonnistuu
      */

@@ -88,7 +88,7 @@ public class LaturiGUIController implements Initializable {
    }
    
   
-  @FXML private void handelVanhaAjoneuvo() {
+  @FXML private void handleVanhaAjoneuvo() {
        ModalController.showModal(LaturiGUIController.class.getResource("VanhaAjoneuvoGUIView.fxml"), "Ajoneuvo", null, "");;
    }
    
@@ -102,7 +102,7 @@ public class LaturiGUIController implements Initializable {
       uusiLataus();
   }
    
-  @FXML private void handleMuokkaaLataus() {
+  @FXML private void handleMuokkaaLatausta() {
       ModalController.showModal(LaturiGUIController.class.getResource("VanhaLausGUIView.fxml"), "Lataus", null, "");
   }
 
@@ -336,6 +336,10 @@ public class LaturiGUIController implements Initializable {
      */
     @FXML private void handleAjoneuvoRaportti() {
         Dialogs.showMessageDialog("Ei osata vielä näyttää raporttia ajoneuvosta");
+    }
+    
+    @FXML private void handleMuokkaaAjoneuvoa() {
+        Dialogs.showMessageDialog("Ei osata vielä muokata ajoneuvoa");
     }
     
 

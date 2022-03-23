@@ -91,7 +91,7 @@ public class Lataus {
         * <pre name="test">
         *   Lataus lataus = new Lataus();
         *   lataus.parse("   3   |  2  |   8.9  | 15.1.2020 | 20 ");
-        *   lataus.getAjoneuvoNro() === 10;
+        *   lataus.getAjoneuvoNro() === 2;
         *   lataus.toString()    === "3|2|8.9|15.1.2020|20";
         *   
         *   lataus.rekisteroi();

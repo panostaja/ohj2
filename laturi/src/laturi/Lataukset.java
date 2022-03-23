@@ -49,7 +49,7 @@ public class Lataukset implements Iterable<Lataus> {
 
 
     /**
-     * Lukee ajoneuvon tiedostosta.  Kesken.
+     * Lukee ajoneuvon tiedostosta.  
      * @param hakemisto tiedoston hakemisto
      * @throws SailoException jos lukeminen epäonnistuu
      */

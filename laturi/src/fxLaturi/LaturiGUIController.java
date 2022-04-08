@@ -13,15 +13,12 @@ import fi.jyu.mit.fxgui.ComboBoxChooser;
 import fi.jyu.mit.fxgui.Dialogs;
 import fi.jyu.mit.fxgui.ListChooser;
 import fi.jyu.mit.fxgui.ModalController;
-import fi.jyu.mit.fxgui.TextAreaOutputStream;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Font;
 import laturi.Ajoneuvo;
 import laturi.Lataus;
 import laturi.Laturi;
@@ -41,6 +38,11 @@ public class LaturiGUIController implements Initializable {
     @FXML private Label labelVirhe;
     @FXML private ListChooser<Ajoneuvo> chooserAjoneuvot;
     @FXML private ScrollPane panelAjoneuvo;
+    
+    @FXML TextField editAjo;
+    @FXML TextField editMerkki;
+    @FXML TextField editMalli;
+    @FXML TextField editAkku;
     
     private String laturinnimi = "humppavaara";
 
@@ -88,8 +90,8 @@ public class LaturiGUIController implements Initializable {
    }
    
   
-  @FXML private void handleVanhaAjoneuvo() {
-       ModalController.showModal(LaturiGUIController.class.getResource("VanhaAjoneuvoGUIView.fxml"), "Ajoneuvo", null, "");;
+  @FXML private void handleMuokkaaAjoneuvoa() {
+      muokkaa();
    }
    
  
@@ -103,7 +105,7 @@ public class LaturiGUIController implements Initializable {
   }
    
   @FXML private void handleMuokkaaLatausta() {
-      ModalController.showModal(LaturiGUIController.class.getResource("VanhaLausGUIView.fxml"), "Lataus", null, "");
+      ModalController.showModal(LaturiGUIController.class.getResource("VanhaLatausGUIView.fxml"), "Lataus", null, "");
   }
 
   
@@ -128,12 +130,11 @@ public class LaturiGUIController implements Initializable {
   // Tästä eteenpäin ei käyttöliittymään suoraan liittyvää koodia    
   
     private Laturi laturi;
-    private TextArea areaAjoneuvo = new TextArea(); // TODO: poista tämä lopuksi
+ 
     
     
     private void alusta() {
-        panelAjoneuvo.setContent(areaAjoneuvo);
-        areaAjoneuvo.setFont(new Font("Courier New", 12));
+      
         panelAjoneuvo.setFitToHeight(true);
         chooserAjoneuvot.clear();
         chooserAjoneuvot.addSelectionListener(e -> naytaAjoneuvo());
@@ -226,14 +227,14 @@ public class LaturiGUIController implements Initializable {
         Ajoneuvo ajoneuvoKohdalla = chooserAjoneuvot.getSelectedObject();
 
         if (ajoneuvoKohdalla == null) return;
+        editAjo.setText(ajoneuvoKohdalla.getRekisteriTunnus());
+        
 
-        areaAjoneuvo.setText("");
-        try (PrintStream os = TextAreaOutputStream.getTextPrintStream(areaAjoneuvo)) {
-          tulosta(os, ajoneuvoKohdalla);
-        }
+       
     }
    
 
+    @SuppressWarnings("unused")  //TODO: otetaan myöhemmin käyttöön
     private void tulosta(PrintStream os, Ajoneuvo ajoneuvo) {
         os.println("---------------------------------------------------");
         ajoneuvo.tulosta(os);
@@ -280,6 +281,14 @@ public class LaturiGUIController implements Initializable {
             Dialogs.showMessageDialog("Ongelmia uuden luomisessa " + e.getMessage());
         } 
         hae(uusi.getTunnusNro());
+    }
+    
+    
+    private void muokkaa() {
+   //   ModalController.showModal(LaturiGUIController.class.getResource("AjoneuvoDialogView.fxml"), "Ajoneuvo", null, "");
+        Ajoneuvo ajoneuvoKohdalla = chooserAjoneuvot.getSelectedObject(); 
+        if (ajoneuvoKohdalla == null) return;
+        AjoneuvoDialogController.kysyAjoneuvo(null, ajoneuvoKohdalla);
     }
     
     
@@ -338,9 +347,6 @@ public class LaturiGUIController implements Initializable {
         Dialogs.showMessageDialog("Ei osata vielä näyttää raporttia ajoneuvosta");
     }
     
-    @FXML private void handleMuokkaaAjoneuvoa() {
-        Dialogs.showMessageDialog("Ei osata vielä muokata ajoneuvoa");
-    }
-    
+  
 
 }

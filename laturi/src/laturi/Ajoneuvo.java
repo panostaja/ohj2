@@ -211,4 +211,32 @@ public class Ajoneuvo {
         return rekisteriTunnus;
     }
 
+
+    /**
+     * @return Ajoneuvon merkki
+     * 
+     */
+    public String getMerkki() {
+        
+        return merkki;
+    }
+
+
+    /**
+     * @return ajoneuvon malli
+     */
+    public String getMalli() {
+        
+        return malli;
+    }
+
+
+    /**
+     * @return ajoneuvon akun koko
+     */
+    public Double getAkku() {
+       
+        return akunKoko;
+    }
+
 }

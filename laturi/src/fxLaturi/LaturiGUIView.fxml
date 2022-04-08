@@ -128,18 +128,18 @@
                               <Insets left="10.0" right="10.0" top="10.0" />
                            </padding>
                            <children>
-                              <Label text="Rekisterinumero" />
+                              <Label   text="Rekisterinumero" />
                               <Label text="Merkki" GridPane.rowIndex="1" />
-                              <Label text="Malli" GridPane.rowIndex="2" />
-                              <Label text="Akun koko" GridPane.rowIndex="3" />
+                              <Label  text="Malli" GridPane.rowIndex="2" />
+                              <Label   text="Akun koko" GridPane.rowIndex="3" />
                               <Label text="Max latausteho" GridPane.rowIndex="4" />
                               <Label text="Haltija" GridPane.rowIndex="5" />
                               <Label text="Puhelinnumero" GridPane.rowIndex="6" />
                               <Label text="email" GridPane.rowIndex="7" />
-                              <TextField onMouseClicked="#handleVanhaAjoneuvo" text="ABC-123" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
-                              <TextField text="Seat" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
-                              <TextField text="Mii" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
-                              <TextField text="36.8" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
+                              <TextField fx:id="editAjo"  onMouseClicked="#handleMuokkaaAjoneuvoa" text="ABC-123" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+                              <TextField fx:id="editMerkki" text="Seat" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
+                              <TextField fx:id="editMalli" text="Mii" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
+                              <TextField fx:id="editAkku" text="36.8" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
                               <TextField text="11" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                               <TextField text="Mikko Mallikas" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                               <TextField text="+358400123456" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="6" />

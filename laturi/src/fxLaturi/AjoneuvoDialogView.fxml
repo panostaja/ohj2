@@ -14,16 +14,16 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import fxLaturi.*?>
 
-<SplitPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxLaturi.AjoneuvoDialogController">
+<SplitPane stylesheets="@laturi.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxLaturi.AjoneuvoDialogController">
    <items>
       <BorderPane maxWidth="500.0" minWidth="138.0" prefWidth="350.0">
          <top>
-            <Label text="Ajoneuvon tiedot" BorderPane.alignment="CENTER" />
+            <Label fx:id = "labelVirhe" text="Ajoneuvon tiedot" BorderPane.alignment="CENTER" />
          </top>
          <center>
             <ScrollPane fitToWidth="true" BorderPane.alignment="CENTER">
                <content>
-                  <GridPane hgap="10.0">
+                  <GridPane fx:id = "gridAjoneuvo" hgap="10.0">
                      <columnConstraints>
                         <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
                         <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />

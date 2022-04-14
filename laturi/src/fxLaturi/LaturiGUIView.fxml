@@ -109,7 +109,7 @@
                <center>
                   <ScrollPane fx:id="panelAjoneuvo" fitToWidth="true" BorderPane.alignment="CENTER">
                      <content>
-                        <GridPane hgap="10.0">
+                        <GridPane fx:id = "gridAjoneuvo" hgap="10.0">
                           <columnConstraints>
                             <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
                             <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
@@ -159,7 +159,7 @@
                   <Label text="Lataukset" BorderPane.alignment="CENTER" />
                </top>
                <center>
-                  <StringGrid rivit="PVM|kWh|Kesto&#10;3.1.2022|55|10&#10;23.11.2021|13|5&#10;&#10;" BorderPane.alignment="CENTER" />
+                  <StringGrid fx:id="tableLataukset"  rivit="PVM|kWh|Kesto&#10;3.1.2022|55|10&#10;23.11.2021|13|5&#10;&#10;" BorderPane.alignment="CENTER" />
                </center>
             </BorderPane>
          </items>

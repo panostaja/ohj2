@@ -203,5 +203,15 @@ public class Laturi {
               System.out.println(e.getMessage());
         }
     }
+
+
+    /**Korvaa tai lisää ajoneuvon tietorakenteessa
+     * @param ajoneuvo lisättävän ajoneuvon viite. Tietorakenne on omistaja
+     * @throws SailoException jos tietorakenne täynnä
+     */
+    public void korvaaTaiLisaa(Ajoneuvo ajoneuvo) throws SailoException{
+        ajoneuvot.korvaaTaiLisaa(ajoneuvo);
+        
+    }
     
 }

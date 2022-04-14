@@ -29,6 +29,7 @@ public class Ajoneuvot {
     private static final int MAX_AJONEUVOJA   = 5;
     private int              lkm              = 0;
     private Ajoneuvo         alkiot[]      = new Ajoneuvo[MAX_AJONEUVOJA];
+    private boolean muutettu = false;
     
     /**
      * Oletusmuodostaja
@@ -107,6 +108,7 @@ public class Ajoneuvot {
         // } catch ( IOException e ) {
         //     throw new SailoException("Ongelmia tiedoston kanssa: " + e.getMessage());
         }     
+        muutettu = false;
     }
 
     
@@ -121,6 +123,7 @@ public class Ajoneuvot {
      * @throws SailoException jos talletus epäonnistuu
      */
     public void tallenna(String hakemisto) throws SailoException {
+        if (!muutettu) return; 
         File ftied = new File(hakemisto + "/autot.dat");
         try (PrintStream fo = new PrintStream(new FileOutputStream(ftied, false))) {
            for (int i=0; i<this.getLkm(); i++) {
@@ -178,5 +181,45 @@ public class Ajoneuvot {
 
         
     }
+
+    /**
+     * Korvaa ajoneuvon tietorakenteessa.  Ottaa ajoneuvon omistukseensa.
+     * Etsitään samalla tunnusnumerolla oleva ajoneuvo.  Jos ei löydy,
+     * niin lisätään uutena ajoneuvona.
+     * @param ajoneuvo lisätäävän ajoneuvon viite.  Huom tietorakenne muuttuu omistajaksi
+     * @throws SailoException jos tietorakenne on jo täynnä
+     * <pre name="test">
+     * #THROWS SailoException,CloneNotSupportedException
+     * #PACKAGEIMPORT
+     * Ajoneuvot ajoneuvot = new Ajoneuvot();
+     * Ajoneuvo ajo1 = new Ajoneuvo(), ajo2 = new Ajoneuvo();
+     * ajo1.rekisteroi(); ajo2.rekisteroi();
+     * ajoneuvot.getLkm() === 0;
+     * ajoneuvot.korvaaTaiLisaa(ajo1); ajoneuvot.getLkm() === 1;
+     * ajoneuvot.korvaaTaiLisaa(ajo2); ajoneuvot.getLkm() === 2;
+     * Ajoneuvo ajo3 = ajo1.clone();
+     * ajo3.setRekisteriTunnus("AAA-111");
+     * Iterator<Ajoneuvo> it = ajoneuvot.iterator();
+     * it.next() == ajo1 === true;
+     * ajoneuvot.korvaaTaiLisaa(ajo3); ajoneuvot.getLkm() === 2;
+     * it = ajoneuvot.iterator();
+     * Ajoneuvo j0 = it.next();
+     * j0 === ajo3;
+     * j0 == ajo3 === true;
+     * j0 == ajo1 === false;
+     * </pre>
+     */
+    public void korvaaTaiLisaa(Ajoneuvo ajoneuvo) throws SailoException {
+        int id = ajoneuvo.getTunnusNro();
+        for (int i = 0; i < lkm; i++) {
+            if ( alkiot[i].getTunnusNro() == id ) {
+                alkiot[i] = ajoneuvo;
+                muutettu = true;
+                return;
+            }
+        }
+        lisaa(ajoneuvo);
+    }
+
     
 }

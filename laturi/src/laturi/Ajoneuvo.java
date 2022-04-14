@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 
 import fi.jyu.mit.ohj2.Mjonot;
+import kanta.RekTarkistus;
 
 /**
 *|------------------------------------------------------------------------|
@@ -30,7 +31,7 @@ import fi.jyu.mit.ohj2.Mjonot;
  * @version 19.2.2022
  *
  */
-public class Ajoneuvo {
+public class Ajoneuvo  implements Cloneable {
     
     private int         tunnusNro        = 0;
     private String      rekisteriTunnus  ="";
@@ -239,4 +240,133 @@ public class Ajoneuvo {
         return akunKoko;
     }
 
+private RekTarkistus rekisterinumerot = new RekTarkistus();
+
+/**
+ * @return kenttien lukumäärä
+ */
+public int getKenttia() {
+    return 8;
+}
+
+/**
+ * Palauttaa k:tta jäsenen kenttää vastaavan kysymyksen
+ * @param k kuinka monennen kentän kysymys palautetaan (0-alkuinen)
+ * @return k:netta kenttää vastaava kysymys
+ */
+public String getKysymys(int k) {
+    switch ( k ) {
+    case 0: return "Tunnus nro";
+    case 1: return "rekisterituunnus";
+    case 2: return "merkki";
+    case 3: return "malli";
+    case 4: return "akun koko";
+    case 5: return "max latausteho";
+    case 6: return "haltija";
+    case 7: return "puhelinnumero";
+    case 8: return "email";
+    default: return "Äääliö";
+    }
+}
+
+public String anna(int k) {
+    switch ( k ) {
+    case 0: return "" + tunnusNro;
+    case 1: return "" + rekisteriTunnus;
+    case 2: return "" + merkki;
+    case 3: return "" + malli;
+    case 4: return "" + akunKoko;
+    case 5: return "" + maxACLatausTeho;
+    case 6: return "" + haltija;
+    case 7: return "" + puhelin;
+    case 8: return "" + email;
+    default: return "Äääliö";
+    }
+}
+
+
+    public String setRekisteriTunnus(String s) {
+        String virhe = rekisterinumerot.tarkista(s);
+        if (virhe != null) return virhe;
+        rekisteriTunnus = s;
+        return null;
+    }
+    
+    
+    
+    @Override
+    public Ajoneuvo clone() throws CloneNotSupportedException {
+        Ajoneuvo uusi;
+        uusi = (Ajoneuvo) super.clone();
+        return uusi;
+    }
+
+
+    /**
+     * @return ensimmäinen mielekäs kenttä kyseltäväksi
+     */
+    public int ekaKentta() {
+        return 1;
+    }
+
+    /**
+     * TOOO: korjaa testit  
+     * 
+     * Asettaa k:n kentän arvoksi parametrina tuodun merkkijonon arvon
+     * @param k kuinka monennen kentän arvo asetetaan
+     * @param jono jonoa joka asetetaan kentän arvoksi
+     * @return null jos asettaminen onnistuu, muuten vastaava virheilmoitus.
+     * @example
+     * <pre name="test">
+     *   Jasen jasen = new Jasen();
+     *   jasen.aseta(1,"Ankka Aku") === null;
+     *   jasen.aseta(2,"kissa") =R= "Hetu liian lyhyt"
+     *   jasen.aseta(2,"030201-1111") === "Tarkistusmerkin kuuluisi olla C"; 
+     *   jasen.aseta(2,"030201-111C") === null; 
+     *   jasen.aseta(9,"kissa") === "Liittymisvuosi väärin jono = \"kissa\"";
+     *   jasen.aseta(9,"1940") === null;
+     * </pre>
+     */
+   // @Override
+    public String aseta(int k, String jono) {
+        String tjono = jono.trim();
+        StringBuffer sb = new StringBuffer(tjono);
+        switch ( k ) {
+        case 0:
+            setTunnusNro(Mjonot.erota(sb, '§', getTunnusNro()));
+            return null;
+        case 1:
+            RekTarkistus rek = new RekTarkistus();
+            String virhe = rek.tarkista(tjono);
+            if ( virhe != null ) return virhe;
+            rekisteriTunnus = tjono;
+            return null;
+        case 2:
+            
+            merkki = tjono;
+            return null;
+        case 3:
+            malli = tjono;
+            return null;
+        case 4:
+            akunKoko = Mjonot.erotaDouble(sb, 0);;
+            return null;
+        case 5:
+            maxACLatausTeho = Mjonot.erotaDouble(sb, 0);
+            return null;
+        case 6:
+            haltija = tjono;
+            return null;
+        case 7:
+            puhelin = tjono;
+            return null;
+        case 8:
+            email = tjono;
+            return null;
+        default:
+            return "ÄÄliö";
+        }
+    }
+
+    
 }

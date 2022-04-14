@@ -3,11 +3,16 @@ package fxLaturi;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import fi.jyu.mit.fxgui.Dialogs;
 import fi.jyu.mit.fxgui.ModalController;
 import fi.jyu.mit.fxgui.ModalControllerInterface;
+import fi.jyu.mit.ohj2.Mjonot;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import laturi.Ajoneuvo;
  
@@ -23,17 +28,34 @@ public class AjoneuvoDialogController implements ModalControllerInterface<Ajoneu
     
     
     @FXML private void handleOK() {
-        //
+         if (ajoneuvoKohdalla != null && ajoneuvoKohdalla.getRekisteriTunnus().trim().equals("")) {
+             naytaVirhe("Rekisteritunnus ei saa olla tyhjä");
+             return;
+         }
+         ModalController.closeStage(labelVirhe);
     }
     
+    private void naytaVirhe(String virhe) {
+        if (virhe == null || virhe.isEmpty()) {
+            labelVirhe.setText("");
+            labelVirhe.getStyleClass().removeAll("virhe");
+            return;
+        }
+        labelVirhe.setText(virhe);
+        labelVirhe.getStyleClass().add("virhe");
+    }
+
     @FXML private void handleCancel() {
         ModalController.closeStage(editAjo);
+        ajoneuvoKohdalla = null;
     }
     
     @FXML TextField editAjo;
     @FXML TextField editMerkki;
     @FXML TextField editMalli;
     @FXML TextField editAkku;
+    @FXML Label labelVirhe;
+    @FXML GridPane gridAjoneuvo;
     
     
     
@@ -41,13 +63,20 @@ public class AjoneuvoDialogController implements ModalControllerInterface<Ajoneu
    // _____________________________________________________________________________________________
     
     private Ajoneuvo ajoneuvoKohdalla;
+    private static  TextField[] edits;
+    private static Ajoneuvo apuajoneuvo = new Ajoneuvo();
     
-    private void naytaAjoneuvo(Ajoneuvo ajoneuvo) {
+    /**
+     * Näytetään ajoneuvon tiedor Textfield komponetteihin
+     * @param edits taulukko jossa tekstikentät
+     * @param ajoneuvo näytettävä ajoneuvo
+     */
+    public static void naytaAjoneuvo(TextField [] edits, Ajoneuvo ajoneuvo) {
         if (ajoneuvo == null) return;
-        editAjo.setText(ajoneuvo.getRekisteriTunnus());
-        editMerkki.setText(ajoneuvo.getMerkki());
-        editMalli.setText(ajoneuvo.getMalli());
-        editAkku.setText(ajoneuvo.getAkku().toString());
+        for (int k = ajoneuvo.ekaKentta(); k < ajoneuvo.getKenttia(); k++) {
+            edits[k].setText(ajoneuvo.anna(k));
+        }
+        
     }
     
     /**
@@ -65,14 +94,70 @@ public class AjoneuvoDialogController implements ModalControllerInterface<Ajoneu
     
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        // TODO Auto-generated method stub
+        alusta();
         
+    }
+    
+    public void alusta () {
+        edits =luoKentat(gridAjoneuvo);
+        for (TextField edit : edits)
+            if(edit != null)
+                edit.setOnKeyReleased(e -> kasitteleMuutosAjoneuvoon((TextField)(e.getSource())));
+    }
+
+    public static TextField[] luoKentat (GridPane gridAjoneuvo) {
+        gridAjoneuvo.getChildren().clear();
+        
+        TextField[] edits = new TextField[apuajoneuvo.getKenttia()];
+        for (int i=0, k = apuajoneuvo.ekaKentta(); k < apuajoneuvo.getKenttia(); k++, i++) {
+            Label label = new Label(apuajoneuvo.getKysymys(k));
+            gridAjoneuvo.add(label, 0, i);
+            TextField edit = new TextField();
+            edits[k] = edit;
+            edit.setId("e"+k);
+            gridAjoneuvo.add(edit, 1, i);
+           // 
+        }
+        return edits;
+        
+    }
+
+    
+    /**
+     * Palautetaan komponentin id:stä saatava luku
+     * @param obj tutkittava komponentti
+     * @param oletus mikä arvo jos id ei ole kunnollinen
+     * @return komponentin id lukuna 
+     */
+    public static int getFieldId(Object obj, int oletus) {
+        if ( !( obj instanceof Node)) return oletus;
+        Node node = (Node)obj;
+        return Mjonot.erotaInt(node.getId().substring(1),oletus);
+    }
+
+    
+    
+    private void kasitteleMuutosAjoneuvoon(TextField edit) {
+        if (ajoneuvoKohdalla == null) return;
+        String s = edit.getText();
+        int k = getFieldId(edit, apuajoneuvo.ekaKentta());
+        String virhe = ajoneuvoKohdalla.aseta(k, s);
+        
+         if (virhe != null ) {
+           Dialogs.setToolTipText(edit, virhe);
+           edit.getStyleClass().add("virhe");
+           naytaVirhe(virhe);
+        } else {
+            Dialogs.setToolTipText(edit, "");
+            edit.getStyleClass().add("normaali");
+            naytaVirhe(null);
+        }
     }
 
     @Override
     public Ajoneuvo getResult() {
-        // TODO Auto-generated method stub
-        return null;
+        
+        return ajoneuvoKohdalla;
     }
 
     @Override
@@ -84,7 +169,7 @@ public class AjoneuvoDialogController implements ModalControllerInterface<Ajoneu
     @Override
     public void setDefault(Ajoneuvo oletus) {
         this.ajoneuvoKohdalla = oletus;
-        naytaAjoneuvo(ajoneuvoKohdalla);
+        naytaAjoneuvo(edits, ajoneuvoKohdalla);
         
     }
     

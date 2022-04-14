@@ -13,12 +13,14 @@ import fi.jyu.mit.fxgui.ComboBoxChooser;
 import fi.jyu.mit.fxgui.Dialogs;
 import fi.jyu.mit.fxgui.ListChooser;
 import fi.jyu.mit.fxgui.ModalController;
+import fi.jyu.mit.fxgui.StringGrid;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import laturi.Ajoneuvo;
 import laturi.Lataus;
 import laturi.Laturi;
@@ -38,11 +40,14 @@ public class LaturiGUIController implements Initializable {
     @FXML private Label labelVirhe;
     @FXML private ListChooser<Ajoneuvo> chooserAjoneuvot;
     @FXML private ScrollPane panelAjoneuvo;
+    @FXML private GridPane gridAjoneuvo; 
     
     @FXML TextField editAjo;
     @FXML TextField editMerkki;
     @FXML TextField editMalli;
     @FXML TextField editAkku;
+    
+    @FXML StringGrid <Lataus> tableLataukset;
     
     private String laturinnimi = "humppavaara";
 
@@ -130,6 +135,7 @@ public class LaturiGUIController implements Initializable {
   // Tästä eteenpäin ei käyttöliittymään suoraan liittyvää koodia    
   
     private Laturi laturi;
+    private TextField[] edits;
  
     
     
@@ -138,6 +144,15 @@ public class LaturiGUIController implements Initializable {
         panelAjoneuvo.setFitToHeight(true);
         chooserAjoneuvot.clear();
         chooserAjoneuvot.addSelectionListener(e -> naytaAjoneuvo());
+        TextField[] edts = AjoneuvoDialogController.luoKentat(gridAjoneuvo);
+        edits = edts;
+        for (TextField edit: edits)   
+            if ( edit != null ) {   
+                edit.setEditable(false);   
+                edit.setOnMouseClicked(e -> { if ( e.getClickCount() > 1 ) muokkaa(); });   
+            } 
+
+        
     }
   
     
@@ -227,12 +242,29 @@ public class LaturiGUIController implements Initializable {
         Ajoneuvo ajoneuvoKohdalla = chooserAjoneuvot.getSelectedObject();
 
         if (ajoneuvoKohdalla == null) return;
-        editAjo.setText(ajoneuvoKohdalla.getRekisteriTunnus());
+        AjoneuvoDialogController.naytaAjoneuvo(edits, ajoneuvoKohdalla);
+        naytaLataukset(ajoneuvoKohdalla);
         
-
+     
        
     }
    
+
+    private void naytaLataukset(Ajoneuvo ajoneuvo) {
+        tableLataukset.clear();
+        if (ajoneuvo == null) return;
+        List<Lataus> lataukset = laturi.annaLataukset(ajoneuvo);
+        if (lataukset.size() == 0) return;
+        for (Lataus lat: lataukset) naytaLataus(lat);
+    }
+
+
+    private void naytaLataus(Lataus lat) {
+        String[] rivi = lat.toString().split("\\|");
+        tableLataukset.add(lat, rivi[3], rivi[2], rivi[4]);
+        
+    }
+
 
     @SuppressWarnings("unused")  //TODO: otetaan myöhemmin käyttöön
     private void tulosta(PrintStream os, Ajoneuvo ajoneuvo) {
@@ -273,22 +305,38 @@ public class LaturiGUIController implements Initializable {
      */
     private void uusiAjoneuvo() {
         Ajoneuvo uusi = new Ajoneuvo();
+        uusi = AjoneuvoDialogController.kysyAjoneuvo(null, uusi);
+        if (uusi == null) return;
         uusi.rekisteroi();
-        uusi.taytaTiedoilla();  //TODO: korvataan dialogilla
         try {
             laturi.lisaa(uusi);
         } catch (SailoException e) {
             Dialogs.showMessageDialog("Ongelmia uuden luomisessa " + e.getMessage());
         } 
         hae(uusi.getTunnusNro());
-    }
+    } 
     
     
     private void muokkaa() {
-   //   ModalController.showModal(LaturiGUIController.class.getResource("AjoneuvoDialogView.fxml"), "Ajoneuvo", null, "");
+   
         Ajoneuvo ajoneuvoKohdalla = chooserAjoneuvot.getSelectedObject(); 
         if (ajoneuvoKohdalla == null) return;
-        AjoneuvoDialogController.kysyAjoneuvo(null, ajoneuvoKohdalla);
+        Ajoneuvo ajoneuvo;
+        try {
+        ajoneuvo = AjoneuvoDialogController.kysyAjoneuvo(null, ajoneuvoKohdalla.clone());
+        if (ajoneuvo == null) return;
+        try {
+            laturi.korvaaTaiLisaa(ajoneuvo);
+        } catch (SailoException e) {
+          
+            Dialogs.showMessageDialog(e.getMessage());
+        }
+        hae(ajoneuvo.getTunnusNro());
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        
+       
     }
     
     

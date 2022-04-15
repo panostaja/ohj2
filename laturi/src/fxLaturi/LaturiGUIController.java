@@ -1,5 +1,6 @@
 package fxLaturi;
 
+import static fxLaturi.AjoneuvoDialogController.getFieldId; 
 import java.awt.Desktop;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -96,7 +97,7 @@ public class LaturiGUIController implements Initializable {
    
   
   @FXML private void handleMuokkaaAjoneuvoa() {
-      muokkaa();
+      muokkaa(kentta);
    }
    
  
@@ -110,7 +111,7 @@ public class LaturiGUIController implements Initializable {
   }
    
   @FXML private void handleMuokkaaLatausta() {
-      ModalController.showModal(LaturiGUIController.class.getResource("VanhaLatausGUIView.fxml"), "Lataus", null, "");
+     //  ModalController.showModal(LaturiGUIController.class.getResource("VanhaLatausGUIView.fxml"), "Lataus", null, "");
   }
 
   
@@ -136,6 +137,7 @@ public class LaturiGUIController implements Initializable {
   
     private Laturi laturi;
     private TextField[] edits;
+    private int kentta = 0;
  
     
     
@@ -144,12 +146,14 @@ public class LaturiGUIController implements Initializable {
         panelAjoneuvo.setFitToHeight(true);
         chooserAjoneuvot.clear();
         chooserAjoneuvot.addSelectionListener(e -> naytaAjoneuvo());
-        TextField[] edts = AjoneuvoDialogController.luoKentat(gridAjoneuvo);
-        edits = edts;
+       
+        edits = AjoneuvoDialogController.luoKentat(gridAjoneuvo);
         for (TextField edit: edits)   
             if ( edit != null ) {   
                 edit.setEditable(false);   
-                edit.setOnMouseClicked(e -> { if ( e.getClickCount() > 1 ) muokkaa(); });   
+                edit.setOnMouseClicked(e -> { if ( e.getClickCount() > 1 ) muokkaa(getFieldId(edit,kentta)); });  
+                edit.focusedProperty().addListener((a,o,n) -> kentta = getFieldId(edit,kentta));
+   
             } 
 
         
@@ -305,7 +309,7 @@ public class LaturiGUIController implements Initializable {
      */
     private void uusiAjoneuvo() {
         Ajoneuvo uusi = new Ajoneuvo();
-        uusi = AjoneuvoDialogController.kysyAjoneuvo(null, uusi);
+        uusi = AjoneuvoDialogController.kysyAjoneuvo(null, uusi, uusi.ekaKentta());
         if (uusi == null) return;
         uusi.rekisteroi();
         try {
@@ -317,13 +321,13 @@ public class LaturiGUIController implements Initializable {
     } 
     
     
-    private void muokkaa() {
+    private void muokkaa(int k) {
    
         Ajoneuvo ajoneuvoKohdalla = chooserAjoneuvot.getSelectedObject(); 
         if (ajoneuvoKohdalla == null) return;
         Ajoneuvo ajoneuvo;
         try {
-        ajoneuvo = AjoneuvoDialogController.kysyAjoneuvo(null, ajoneuvoKohdalla.clone());
+        ajoneuvo = AjoneuvoDialogController.kysyAjoneuvo(null, ajoneuvoKohdalla.clone(), k);
         if (ajoneuvo == null) return;
         try {
             laturi.korvaaTaiLisaa(ajoneuvo);

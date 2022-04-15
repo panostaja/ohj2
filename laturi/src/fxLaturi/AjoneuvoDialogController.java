@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -56,6 +57,7 @@ public class AjoneuvoDialogController implements ModalControllerInterface<Ajoneu
     @FXML TextField editAkku;
     @FXML Label labelVirhe;
     @FXML GridPane gridAjoneuvo;
+    @FXML ScrollPane panelAjoneuvo;
     
     
     
@@ -65,6 +67,7 @@ public class AjoneuvoDialogController implements ModalControllerInterface<Ajoneu
     private Ajoneuvo ajoneuvoKohdalla;
     private static  TextField[] edits;
     private static Ajoneuvo apuajoneuvo = new Ajoneuvo();
+    private int kentta = 0;  // mikä kenttä aktivoidaan kun dialogi aukaistaan
     
     /**
      * Näytetään ajoneuvon tiedor Textfield komponetteihin
@@ -84,12 +87,17 @@ public class AjoneuvoDialogController implements ModalControllerInterface<Ajoneu
      * Luodaan Ajoneuvon kysymysdialogi ja palautetaan
      * @param modalityStage Stage jolle ollaan modaalisia
      * @param oletus   mitä dataan näytettäään oletuksena
+     * @param kentta mikä kenttä on fokuksessa kun näytetään
      * @return null jos Cancel, muuten tietue
      
      */
-    public static Ajoneuvo kysyAjoneuvo(Stage modalityStage, Ajoneuvo oletus) {
-    return ModalController.showModal(LaturiGUIController.class.getResource("AjoneuvoDialogView.fxml"), "Ajoneuvo", modalityStage, oletus);       
-    
+    public static Ajoneuvo kysyAjoneuvo(Stage modalityStage, Ajoneuvo oletus, int kentta) {
+        return ModalController.<Ajoneuvo, AjoneuvoDialogController>showModal(
+                  AjoneuvoDialogController.class.getResource("AjoneuvoDialogView.fxml"), 
+                  "Ajoneuvo", 
+                  modalityStage, oletus,
+                  ctrl -> ctrl.setKentta(kentta));
+
     }
     
     @Override
@@ -103,6 +111,7 @@ public class AjoneuvoDialogController implements ModalControllerInterface<Ajoneu
         for (TextField edit : edits)
             if(edit != null)
                 edit.setOnKeyReleased(e -> kasitteleMuutosAjoneuvoon((TextField)(e.getSource())));
+        panelAjoneuvo.setFitToHeight(true);
     }
 
     public static TextField[] luoKentat (GridPane gridAjoneuvo) {
@@ -149,7 +158,7 @@ public class AjoneuvoDialogController implements ModalControllerInterface<Ajoneu
            naytaVirhe(virhe);
         } else {
             Dialogs.setToolTipText(edit, "");
-            edit.getStyleClass().add("normaali");
+            edit.getStyleClass().removeAll("virhe");
             naytaVirhe(null);
         }
     }
@@ -162,7 +171,9 @@ public class AjoneuvoDialogController implements ModalControllerInterface<Ajoneu
 
     @Override
     public void handleShown() {
-        // TODO Auto-generated method stub
+        kentta = Math.max(apuajoneuvo.ekaKentta(), Math.min(kentta, apuajoneuvo.getKenttia()-1)); 
+        edits[kentta].requestFocus(); 
+
         
     }
 
@@ -174,7 +185,10 @@ public class AjoneuvoDialogController implements ModalControllerInterface<Ajoneu
     }
     
    
-    
+    private void setKentta(int kentta) {
+        this.kentta = kentta; 
+     }
+
     
 
 }

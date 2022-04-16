@@ -1,6 +1,7 @@
 package laturi;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -224,6 +225,17 @@ public class Laturi {
     public void korvaaTaiLisaa(Ajoneuvo ajoneuvo) throws SailoException{
         ajoneuvot.korvaaTaiLisaa(ajoneuvo);
         
+    }
+
+    /**
+     * palauttaa listan ajoneuvoista jotka sopivat hakuehtoon
+     * @param ehto hakuehto
+     * @param k kentan indeksi jonka mukaan etsitaan
+     * @return löytyneet ajoneuvot
+     */
+    public Collection<Ajoneuvo> etsi(String ehto, int k) {
+       
+        return ajoneuvot.etsi(ehto, k);
     }
     
 }

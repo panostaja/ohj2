@@ -6,6 +6,7 @@ package laturi;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Comparator;
 
 import fi.jyu.mit.ohj2.Mjonot;
 import kanta.RekTarkistus;
@@ -374,6 +375,39 @@ public String anna(int k) {
             return "ÄÄliö";
         }
     }
+    
+    public String getAvain(int k) {
+        switch ( k ) {
+        case 0: return "" + tunnusNro;
+        case 1: return "" + rekisteriTunnus;
+        case 2: return "" + merkki;
+        case 3: return "" + malli;
+        case 4: return "" + akunKoko;
+        case 5: return "" + maxACLatausTeho;
+        case 6: return "" + haltija;
+        case 7: return "" + puhelin;
+        case 8: return "" + email;
+        default: return "Äääliö";
+        }
+    }
 
+
+  /*
+   * Luokka joka osaa verrata kahta ajoneuvoa
+   */
+    public static class Vertailija implements Comparator<Ajoneuvo> {
+       private int k;
+       
+       public Vertailija(int k) {
+           this.k = k;
+       }
+
+    @Override
+    public int compare(Ajoneuvo ajo1, Ajoneuvo ajo2) {
+        return ajo1.getAvain(k).compareTo(ajo2.getAvain(k));
+    }
+       
+       
+    }
     
 }

@@ -7,6 +7,7 @@ import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.List; 
 import java.util.ResourceBundle;
 
@@ -333,17 +334,19 @@ public class LaturiGUIController implements Initializable {
             Ajoneuvo kohdalla = chooserAjoneuvot.getSelectedObject();
             if (kohdalla != null) anro = kohdalla.getTunnusNro();
         }
+        
+        int k = cbKentat.getSelectionModel().getSelectedIndex() + apuajoneuvo.ekaKentta();
+        
         chooserAjoneuvot.clear();
         String ehto = hakuehto.getText();
+        if (ehto.indexOf('*') < 0) ehto = "*" + ehto + "*";
+        Collection<Ajoneuvo> ajoneuvot = laturi.etsi(ehto, k);
         int index = 0;
         int ci = 0;
-        for (int i=0; i < laturi.getAjoneuvoja(); i++) {
-            Ajoneuvo ajoneuvo = laturi.annaAjoneuvo(i);
-            if(!ajoneuvo.getRekisteriTunnus().contains(ehto)) continue;
-           
-            if (ajoneuvo.getTunnusNro() == anro) index = ci;
+        for (Ajoneuvo ajoneuvo: ajoneuvot) {
+           if (ajoneuvo.getTunnusNro() == anro) index = ci;
             chooserAjoneuvot.add(ajoneuvo.getRekisteriTunnus(), ajoneuvo);
-            ci++;
+          ci++;
         }
         chooserAjoneuvot.setSelectedIndex(index); 
     }

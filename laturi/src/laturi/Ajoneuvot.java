@@ -5,8 +5,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
+
+import fi.jyu.mit.ohj2.WildChars;
 
 /**
  * |------------------------------------------------------------------------|
@@ -221,5 +227,26 @@ public class Ajoneuvot {
         lisaa(ajoneuvo);
     }
 
-    
+    /**
+     * @param ehto hakuehto mitä etsitään
+     * @param k kentan indeksi mita etsitaan
+     * @return mitä löydetty
+     */
+    public Collection<Ajoneuvo> etsi(String ehto, int k) {
+        ArrayList<Ajoneuvo> loytyneet = new ArrayList<Ajoneuvo>();
+        int hk = k;
+        if (hk < 0) hk =1;
+        for (int i=0; i<getLkm();i++) {
+            Ajoneuvo ajoneuvo = anna(i);
+            String sisalto = ajoneuvo.anna(hk);
+            if (WildChars.onkoSamat(sisalto,  ehto))
+               loytyneet.add(ajoneuvo);
+        }
+         Collections.sort(loytyneet, new Ajoneuvo.Vertailija(k));
+         return loytyneet;
+
+       
+    }
+
+   
 }

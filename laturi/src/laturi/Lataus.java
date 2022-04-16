@@ -225,7 +225,7 @@ public class Lataus implements Cloneable, Tietue {
             case 2:
                 return "pvm";
             case 3:
-                return "kWh";
+                return "kwh";
             case 4:
                 return "aika";
             default:
@@ -242,9 +242,9 @@ public class Lataus implements Cloneable, Tietue {
             case 1:
                 return "" + ajoneuvoNro;
             case 2:
-                return pvm;
-            case 3:
                 return "" + kwh;
+            case 3:
+                return pvm;
             case 4:
                 return "" + kesto;
             default:

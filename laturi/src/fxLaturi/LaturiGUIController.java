@@ -62,12 +62,7 @@ public class LaturiGUIController implements Initializable {
     
     
     @FXML private void handleHakuehto() {
-        String hakukentta = cbKentat.getSelectedText();
-        String ehto = hakuehto.getText(); 
-        if ( ehto.isEmpty() )
-            naytaVirhe(null);
-        else
-            naytaVirhe("Ei osata vielä hakea " + hakukentta + ": " + ehto);
+        hae(0);
     }
     
 
@@ -143,6 +138,7 @@ public class LaturiGUIController implements Initializable {
     private TextField[] edits;
     private int kentta = 0;
     private static Lataus apulataus = new Lataus();
+    private static Ajoneuvo apuajoneuvo = new Ajoneuvo();
  
     
     
@@ -151,7 +147,11 @@ public class LaturiGUIController implements Initializable {
         panelAjoneuvo.setFitToHeight(true);
         chooserAjoneuvot.clear();
         chooserAjoneuvot.addSelectionListener(e -> naytaAjoneuvo());
-       
+        cbKentat.clear();
+        for (int k=apuajoneuvo.ekaKentta(); k<apuajoneuvo.getKenttia(); k++) {
+            cbKentat.add(apuajoneuvo.getKysymys(k));
+        }
+        cbKentat.setSelectedIndex(0);
         edits = TietueDialogController.luoKentat(gridAjoneuvo, new Ajoneuvo());
         for (TextField edit: edits)   
             if ( edit != null ) {   
@@ -322,14 +322,28 @@ public class LaturiGUIController implements Initializable {
     }
     
     
-    private void hae(int anro) {
+    /*
+     * Hakee ajoneuvojen tiedot listaan
+     * jos 0 niin aktivoidaan nykyinen ajoneuvo
+     */
+    
+    private void hae(int anr) {
+        int anro = anr;
+        if (anro == 0) { 
+            Ajoneuvo kohdalla = chooserAjoneuvot.getSelectedObject();
+            if (kohdalla != null) anro = kohdalla.getTunnusNro();
+        }
         chooserAjoneuvot.clear();
-
+        String ehto = hakuehto.getText();
         int index = 0;
+        int ci = 0;
         for (int i=0; i < laturi.getAjoneuvoja(); i++) {
             Ajoneuvo ajoneuvo = laturi.annaAjoneuvo(i);
-            if (ajoneuvo.getTunnusNro() == anro) index = i;
+            if(!ajoneuvo.getRekisteriTunnus().contains(ehto)) continue;
+           
+            if (ajoneuvo.getTunnusNro() == anro) index = ci;
             chooserAjoneuvot.add(ajoneuvo.getRekisteriTunnus(), ajoneuvo);
+            ci++;
         }
         chooserAjoneuvot.setSelectedIndex(index); 
     }

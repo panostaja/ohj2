@@ -49,7 +49,7 @@ public class TietueDialogController<TYPE extends Tietue> implements ModalControl
 
     @FXML private void handleCancel() {
         tietueKohdalla = null;
-        ModalController.closeStage(editAjo);
+        ModalController.closeStage(labelVirhe);
     }
     
     @FXML TextField editAjo;
@@ -73,7 +73,8 @@ public class TietueDialogController<TYPE extends Tietue> implements ModalControl
     /**
      * Näytetään ajoneuvon tiedor Textfield komponetteihin
      * @param edits taulukko jossa tekstikentät
-     * @param ajoneuvo näytettävä ajoneuvo
+     * @param tietue näytettävä tietue
+   
      */
     public static void naytaTietue(TextField [] edits, Tietue tietue) {
         if (tietue == null) return;
@@ -117,6 +118,9 @@ public class TietueDialogController<TYPE extends Tietue> implements ModalControl
         panelTietue.setFitToHeight(true);
     }
 
+    
+    
+    
     public static<TYPE extends Tietue> TextField[] luoKentat(GridPane gridTietue, TYPE aputietue) {
         gridTietue.getChildren().clear();
         TextField[] edits = new TextField[aputietue.getKenttia()];

@@ -20,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
@@ -141,6 +142,7 @@ public class LaturiGUIController implements Initializable {
     private Laturi laturi;
     private TextField[] edits;
     private int kentta = 0;
+    private static Lataus apulataus = new Lataus();
  
     
     
@@ -158,6 +160,24 @@ public class LaturiGUIController implements Initializable {
                 edit.focusedProperty().addListener((a,o,n) -> kentta = getFieldId(edit,kentta));
    
             } 
+        
+        // alustetaan harrastustaulukon otsikot 
+        int eka = apulataus.ekaKentta(); 
+        int lkm = apulataus.getKenttia(); 
+        String[] headings = new String[lkm-eka]; 
+        for (int i=0, k=eka; k<lkm; i++, k++) headings[i] = apulataus.getKysymys(k); 
+        tableLataukset.initTable(headings); 
+        tableLataukset.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); 
+        tableLataukset.setEditable(false); 
+        tableLataukset.setPlaceholder(new Label("Ei vielä latauksia")); 
+         
+        // Tämä on vielä huono, ei automaattisesti muutu jos kenttiä muutetaan. 
+        tableLataukset.setColumnSortOrderNumber(1); 
+        tableLataukset.setColumnSortOrderNumber(2); 
+        tableLataukset.setColumnWidth(1, 60); 
+        tableLataukset.setColumnWidth(2, 60); 
+
+        
         tableLataukset.setEditable(false);
         tableLataukset.setOnMouseClicked( e -> { if ( e.getClickCount() > 1 ) muokkaaLatausta(); } );
         tableLataukset.setOnKeyPressed( e -> {if ( e.getCode() == KeyCode.F2 ) muokkaaLatausta();}); 
@@ -165,6 +185,8 @@ public class LaturiGUIController implements Initializable {
         
     }
   
+    
+    
     
     private void naytaVirhe(String virhe) {
         if ( virhe == null || virhe.isEmpty() ) {
@@ -270,9 +292,12 @@ public class LaturiGUIController implements Initializable {
 
 
     private void naytaLataus(Lataus lat) {
-        String[] rivi = lat.toString().split("\\|");
-        tableLataukset.add(lat, rivi[3], rivi[2], rivi[4]);
-        
+        int kenttia = lat.getKenttia(); 
+        String[] rivi = new String[kenttia-lat.ekaKentta()]; 
+        for (int i=0, k=lat.ekaKentta(); k < kenttia; i++, k++) 
+            rivi[i] = lat.anna(k); 
+        tableLataukset.add(lat,rivi);
+
     }
 
 
@@ -360,6 +385,7 @@ public class LaturiGUIController implements Initializable {
         
         Lataus lat = new Lataus(ajoneuvoKohdalla.getTunnusNro());  
         lat = TietueDialogController.kysyTietue(null, lat, 0);
+        if ( lat == null ) return;
         lat.rekisteroi();  
         laturi.lisaa(lat);  
         naytaLataukset(ajoneuvoKohdalla);

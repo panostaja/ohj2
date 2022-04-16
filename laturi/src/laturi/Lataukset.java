@@ -26,9 +26,10 @@ import java.util.*;
 public class Lataukset implements Iterable<Lataus> {
 
     private String                      tiedostonNimi = "";
+    private boolean muutettu = false;
 
     /** Taulukko latauksista */
-    private final Collection<Lataus> alkiot        = new ArrayList<Lataus>();
+    private List<Lataus> alkiot        = new ArrayList<Lataus>();
 
 
     /**
@@ -49,6 +50,24 @@ public class Lataukset implements Iterable<Lataus> {
 
 
     /**
+     * @param lataus lisättävän latauksen viite
+     * @throws SailoException jos tietorakenne täynnä
+     */
+    public void korvaaTaiLisaa(Lataus lataus) throws SailoException {
+        int id = lataus.getTunnusNro();
+        for (int i = 0; i < alkiot.size(); i++) {
+            if (alkiot.get(i).getTunnusNro() == id) {
+                alkiot.set(i, lataus);
+                muutettu = true;
+                return;
+            }
+        }
+        lisaa(lataus);
+    }
+
+    
+    
+    /**
      * Lukee ajoneuvon tiedostosta.  
      * @param hakemisto tiedoston hakemisto
      * @throws SailoException jos lukeminen epäonnistuu
@@ -67,9 +86,9 @@ public class Lataukset implements Iterable<Lataus> {
             }
         } catch ( FileNotFoundException e ) {
             throw new SailoException("Ei saa luettua tiedostoa " + nimi);
-        // } catch ( IOException e ) {
-        //     throw new SailoException("Ongelmia tiedoston kanssa: " + e.getMessage());
+       
         }     
+        muutettu = false;
     }
 
 
@@ -179,6 +198,7 @@ public class Lataukset implements Iterable<Lataus> {
      * @throws SailoException jos talletus epäonnistuu
      */
     public void tallenna(String hakemisto) throws SailoException {
+        if ( !muutettu ) return;
         File ftied = new File(hakemisto + "/lataukset.dat");
         try (PrintStream fo = new PrintStream(new FileOutputStream(ftied, false))) {
            for (var lat: alkiot) {
@@ -187,6 +207,7 @@ public class Lataukset implements Iterable<Lataus> {
         } catch (FileNotFoundException ex)  {
             throw new SailoException("Tiedosto " + ftied.getAbsolutePath() + " ei aukea");
         }
+        muutettu = false;
     }
     
 

@@ -9,6 +9,8 @@ import java.io.PrintStream;
 
 import fi.jyu.mit.ohj2.Mjonot;
 import kanta.RekTarkistus;
+import kanta.Tietue;
+
 
 /**
 *|------------------------------------------------------------------------|
@@ -31,7 +33,7 @@ import kanta.RekTarkistus;
  * @version 19.2.2022
  *
  */
-public class Ajoneuvo  implements Cloneable {
+public class Ajoneuvo  implements Cloneable, Tietue {
     
     private int         tunnusNro        = 0;
     private String      rekisteriTunnus  ="";
@@ -245,6 +247,7 @@ private RekTarkistus rekisterinumerot = new RekTarkistus();
 /**
  * @return kenttien lukumäärä
  */
+@Override
 public int getKenttia() {
     return 8;
 }
@@ -254,6 +257,7 @@ public int getKenttia() {
  * @param k kuinka monennen kentän kysymys palautetaan (0-alkuinen)
  * @return k:netta kenttää vastaava kysymys
  */
+@Override
 public String getKysymys(int k) {
     switch ( k ) {
     case 0: return "Tunnus nro";
@@ -269,6 +273,7 @@ public String getKysymys(int k) {
     }
 }
 
+@Override
 public String anna(int k) {
     switch ( k ) {
     case 0: return "" + tunnusNro;
@@ -305,6 +310,7 @@ public String anna(int k) {
     /**
      * @return ensimmäinen mielekäs kenttä kyseltäväksi
      */
+    @Override
     public int ekaKentta() {
         return 1;
     }
@@ -328,6 +334,7 @@ public String anna(int k) {
      * </pre>
      */
    // @Override
+    @Override
     public String aseta(int k, String jono) {
         String tjono = jono.trim();
         StringBuffer sb = new StringBuffer(tjono);

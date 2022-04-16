@@ -57,6 +57,18 @@ public class Laturi {
         
     }
     
+    /** 
+     * Korvaa latauksen tietorakenteessa.  Ottaa latauksen omistukseensa. 
+     * Etsitään samalla tunnusnumerolla oleva lataus.  Jos ei löydy, 
+     * niin lisätään uutena latauksena. 
+     * @param lataus lisättävän latauksen viite.  Huom tietorakenne muuttuu omistajaksi 
+     * @throws SailoException jos tietorakenne on jo täynnä 
+     */ 
+    public void korvaaTaiLisaa(Lataus lataus) throws SailoException { 
+        lataukset.korvaaTaiLisaa(lataus); 
+    } 
+
+    
     
     /**
      * Listään uusi lataus laturiin

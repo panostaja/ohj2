@@ -15,21 +15,22 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import laturi.Ajoneuvo;
+import kanta.Tietue;
  
 /**
  * Ajoneuvon käsittely
  * @author panos
  * @version 3.4.2022
+ * @param <TYPE> Minkä tyyppistä alkiota käsitellään
  *
  */
-public class AjoneuvoDialogController implements ModalControllerInterface<Ajoneuvo>, Initializable {
+public class TietueDialogController<TYPE extends Tietue> implements ModalControllerInterface<TYPE>, Initializable {
  
 
     
     
     @FXML private void handleOK() {
-         if (ajoneuvoKohdalla != null && ajoneuvoKohdalla.getRekisteriTunnus().trim().equals("")) {
+         if (tietueKohdalla != null && tietueKohdalla.anna(tietueKohdalla.ekaKentta()).trim().equals("")) {
              naytaVirhe("Rekisteritunnus ei saa olla tyhjä");
              return;
          }
@@ -47,8 +48,8 @@ public class AjoneuvoDialogController implements ModalControllerInterface<Ajoneu
     }
 
     @FXML private void handleCancel() {
+        tietueKohdalla = null;
         ModalController.closeStage(editAjo);
-        ajoneuvoKohdalla = null;
     }
     
     @FXML TextField editAjo;
@@ -56,17 +57,17 @@ public class AjoneuvoDialogController implements ModalControllerInterface<Ajoneu
     @FXML TextField editMalli;
     @FXML TextField editAkku;
     @FXML Label labelVirhe;
-    @FXML GridPane gridAjoneuvo;
-    @FXML ScrollPane panelAjoneuvo;
+    @FXML GridPane gridTietue;
+    @FXML ScrollPane panelTietue;
     
     
     
     
    // _____________________________________________________________________________________________
     
-    private Ajoneuvo ajoneuvoKohdalla;
+    private TYPE tietueKohdalla;
     private static  TextField[] edits;
-    private static Ajoneuvo apuajoneuvo = new Ajoneuvo();
+   
     private int kentta = 0;  // mikä kenttä aktivoidaan kun dialogi aukaistaan
     
     /**
@@ -74,10 +75,10 @@ public class AjoneuvoDialogController implements ModalControllerInterface<Ajoneu
      * @param edits taulukko jossa tekstikentät
      * @param ajoneuvo näytettävä ajoneuvo
      */
-    public static void naytaAjoneuvo(TextField [] edits, Ajoneuvo ajoneuvo) {
-        if (ajoneuvo == null) return;
-        for (int k = ajoneuvo.ekaKentta(); k < ajoneuvo.getKenttia(); k++) {
-            edits[k].setText(ajoneuvo.anna(k));
+    public static void naytaTietue(TextField [] edits, Tietue tietue) {
+        if (tietue == null) return;
+        for (int k = tietue.ekaKentta(); k < tietue.getKenttia(); k++) {
+            edits[k].setText(tietue.anna(k));
         }
         
     }
@@ -91,44 +92,44 @@ public class AjoneuvoDialogController implements ModalControllerInterface<Ajoneu
      * @return null jos Cancel, muuten tietue
      
      */
-    public static Ajoneuvo kysyAjoneuvo(Stage modalityStage, Ajoneuvo oletus, int kentta) {
-        return ModalController.<Ajoneuvo, AjoneuvoDialogController>showModal(
-                  AjoneuvoDialogController.class.getResource("AjoneuvoDialogView.fxml"), 
-                  "Ajoneuvo", 
-                  modalityStage, oletus,
-                  ctrl -> ctrl.setKentta(kentta));
+    public static<TYPE extends Tietue> TYPE kysyTietue(Stage modalityStage, TYPE oletus, int kentta) {
+        return ModalController.<TYPE, TietueDialogController<TYPE>>showModal(
+                TietueDialogController.class.getResource("TietueDialogView.fxml"),
+                "Laturi",
+                modalityStage, oletus,
+                ctrl -> ctrl.setKentta(kentta) 
+                );
+
 
     }
     
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        alusta();
+      //  alusta();
         
     }
     
     public void alusta () {
-        edits =luoKentat(gridAjoneuvo);
+        edits =luoKentat(gridTietue, tietueKohdalla);
         for (TextField edit : edits)
             if(edit != null)
-                edit.setOnKeyReleased(e -> kasitteleMuutosAjoneuvoon((TextField)(e.getSource())));
-        panelAjoneuvo.setFitToHeight(true);
+                edit.setOnKeyReleased(e -> kasitteleMuutosTietueeseen((TextField)(e.getSource())));
+        panelTietue.setFitToHeight(true);
     }
 
-    public static TextField[] luoKentat (GridPane gridAjoneuvo) {
-        gridAjoneuvo.getChildren().clear();
+    public static<TYPE extends Tietue> TextField[] luoKentat(GridPane gridTietue, TYPE aputietue) {
+        gridTietue.getChildren().clear();
+        TextField[] edits = new TextField[aputietue.getKenttia()];
         
-        TextField[] edits = new TextField[apuajoneuvo.getKenttia()];
-        for (int i=0, k = apuajoneuvo.ekaKentta(); k < apuajoneuvo.getKenttia(); k++, i++) {
-            Label label = new Label(apuajoneuvo.getKysymys(k));
-            gridAjoneuvo.add(label, 0, i);
+        for (int i=0, k = aputietue.ekaKentta(); k < aputietue.getKenttia(); k++, i++) {
+            Label label = new Label(aputietue.getKysymys(k));
+            gridTietue.add(label, 0, i);
             TextField edit = new TextField();
             edits[k] = edit;
             edit.setId("e"+k);
-            gridAjoneuvo.add(edit, 1, i);
-           // 
+            gridTietue.add(edit, 1, i);
         }
         return edits;
-        
     }
 
     
@@ -146,11 +147,11 @@ public class AjoneuvoDialogController implements ModalControllerInterface<Ajoneu
 
     
     
-    private void kasitteleMuutosAjoneuvoon(TextField edit) {
-        if (ajoneuvoKohdalla == null) return;
+    private void kasitteleMuutosTietueeseen(TextField edit) {
+        if (tietueKohdalla == null) return;
         String s = edit.getText();
-        int k = getFieldId(edit, apuajoneuvo.ekaKentta());
-        String virhe = ajoneuvoKohdalla.aseta(k, s);
+        int k = getFieldId(edit, tietueKohdalla.ekaKentta());
+        String virhe = tietueKohdalla.aseta(k, s);
         
          if (virhe != null ) {
            Dialogs.setToolTipText(edit, virhe);
@@ -164,23 +165,24 @@ public class AjoneuvoDialogController implements ModalControllerInterface<Ajoneu
     }
 
     @Override
-    public Ajoneuvo getResult() {
+    public TYPE getResult() {
         
-        return ajoneuvoKohdalla;
+        return tietueKohdalla;
     }
 
     @Override
     public void handleShown() {
-        kentta = Math.max(apuajoneuvo.ekaKentta(), Math.min(kentta, apuajoneuvo.getKenttia()-1)); 
+        kentta = Math.max(tietueKohdalla.ekaKentta(), Math.min(kentta, tietueKohdalla.getKenttia()-1)); 
         edits[kentta].requestFocus(); 
 
         
     }
 
     @Override
-    public void setDefault(Ajoneuvo oletus) {
-        this.ajoneuvoKohdalla = oletus;
-        naytaAjoneuvo(edits, ajoneuvoKohdalla);
+    public void setDefault(TYPE oletus) {
+        this.tietueKohdalla = oletus;
+        alusta();
+        naytaTietue(edits, tietueKohdalla);
         
     }
     

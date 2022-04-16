@@ -1,6 +1,6 @@
 package fxLaturi;
 
-import static fxLaturi.AjoneuvoDialogController.getFieldId; 
+import static fxLaturi.TietueDialogController.getFieldId; 
 import java.awt.Desktop;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -21,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import laturi.Ajoneuvo;
 import laturi.Lataus;
@@ -111,12 +112,14 @@ public class LaturiGUIController implements Initializable {
   }
    
   @FXML private void handleMuokkaaLatausta() {
-     //  ModalController.showModal(LaturiGUIController.class.getResource("VanhaLatausGUIView.fxml"), "Lataus", null, "");
+     muokkaaLatausta();
   }
 
   
-  
- @FXML private void handlePoistaLataus() {
+ 
+
+
+@FXML private void handlePoistaLataus() {
       Dialogs.showMessageDialog("Ei osata vielä poistaa latausta");
  }
   
@@ -147,7 +150,7 @@ public class LaturiGUIController implements Initializable {
         chooserAjoneuvot.clear();
         chooserAjoneuvot.addSelectionListener(e -> naytaAjoneuvo());
        
-        edits = AjoneuvoDialogController.luoKentat(gridAjoneuvo);
+        edits = TietueDialogController.luoKentat(gridAjoneuvo, new Ajoneuvo());
         for (TextField edit: edits)   
             if ( edit != null ) {   
                 edit.setEditable(false);   
@@ -155,6 +158,9 @@ public class LaturiGUIController implements Initializable {
                 edit.focusedProperty().addListener((a,o,n) -> kentta = getFieldId(edit,kentta));
    
             } 
+        tableLataukset.setEditable(false);
+        tableLataukset.setOnMouseClicked( e -> { if ( e.getClickCount() > 1 ) muokkaaLatausta(); } );
+        tableLataukset.setOnKeyPressed( e -> {if ( e.getCode() == KeyCode.F2 ) muokkaaLatausta();}); 
 
         
     }
@@ -246,7 +252,7 @@ public class LaturiGUIController implements Initializable {
         Ajoneuvo ajoneuvoKohdalla = chooserAjoneuvot.getSelectedObject();
 
         if (ajoneuvoKohdalla == null) return;
-        AjoneuvoDialogController.naytaAjoneuvo(edits, ajoneuvoKohdalla);
+        TietueDialogController.naytaTietue(edits, ajoneuvoKohdalla);
         naytaLataukset(ajoneuvoKohdalla);
         
      
@@ -309,7 +315,7 @@ public class LaturiGUIController implements Initializable {
      */
     private void uusiAjoneuvo() {
         Ajoneuvo uusi = new Ajoneuvo();
-        uusi = AjoneuvoDialogController.kysyAjoneuvo(null, uusi, uusi.ekaKentta());
+        uusi = TietueDialogController.kysyTietue(null, uusi, uusi.ekaKentta());
         if (uusi == null) return;
         uusi.rekisteroi();
         try {
@@ -327,7 +333,7 @@ public class LaturiGUIController implements Initializable {
         if (ajoneuvoKohdalla == null) return;
         Ajoneuvo ajoneuvo;
         try {
-        ajoneuvo = AjoneuvoDialogController.kysyAjoneuvo(null, ajoneuvoKohdalla.clone(), k);
+        ajoneuvo = TietueDialogController.kysyTietue(null, ajoneuvoKohdalla.clone(), k);
         if (ajoneuvo == null) return;
         try {
             laturi.korvaaTaiLisaa(ajoneuvo);
@@ -350,15 +356,38 @@ public class LaturiGUIController implements Initializable {
     public void uusiLataus() { 
         Ajoneuvo ajoneuvoKohdalla = chooserAjoneuvot.getSelectedObject();
         if ( ajoneuvoKohdalla == null ) return;  
-        Lataus lat = new Lataus();  
+        
+        
+        Lataus lat = new Lataus(ajoneuvoKohdalla.getTunnusNro());  
+        lat = TietueDialogController.kysyTietue(null, lat, 0);
         lat.rekisteroi();  
-        lat.taytaLatausTiedoilla(ajoneuvoKohdalla.getTunnusNro());  
         laturi.lisaa(lat);  
-        hae(ajoneuvoKohdalla.getTunnusNro());          
+        naytaLataukset(ajoneuvoKohdalla);
+        tableLataukset.selectRow(1000);
+        
+               
     } 
 
     
-    
+    private void muokkaaLatausta() {
+        Ajoneuvo ajoneuvoKohdalla = chooserAjoneuvot.getSelectedObject(); 
+        int r = tableLataukset.getRowNr();
+        if ( r < 0 ) return; // klikattu ehkä otsikkoriviä
+        Lataus lat = tableLataukset.getObject();
+        if ( lat == null ) return;
+        int k = tableLataukset.getColumnNr()+lat.ekaKentta();
+        try {
+            lat = TietueDialogController.kysyTietue(null, lat.clone(), k);
+            if ( lat == null ) return;
+            laturi.korvaaTaiLisaa(lat); 
+            naytaLataukset(ajoneuvoKohdalla); 
+            tableLataukset.selectRow(r);  // järjestetään sama rivi takaisin valituksi
+        } catch (CloneNotSupportedException  e) { /* clone on tehty */  
+        } catch (SailoException e) {
+            Dialogs.showMessageDialog("Ongelmia lisäämisessä: " + e.getMessage());
+        }
+    }
+
     
 
     

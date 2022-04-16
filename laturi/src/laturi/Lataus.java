@@ -4,6 +4,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 
 import fi.jyu.mit.ohj2.Mjonot;
+import kanta.Tietue;
 
 
 /**
@@ -27,7 +28,7 @@ import fi.jyu.mit.ohj2.Mjonot;
   *
   */
 
-public class Lataus {
+public class Lataus implements Cloneable, Tietue {
  
  
   
@@ -68,7 +69,15 @@ public class Lataus {
         */
        @Override
        public String toString() {
-           return "" + getTunnusNro() + "|" + ajoneuvoNro + "|" + kwh + "|" + pvm + "|" + kesto;
+           StringBuffer sb = new StringBuffer("");
+           String erotin = "";
+           for (int k = 0; k < getKenttia(); k++) {
+               sb.append(erotin);
+               sb.append(anna(k));
+               erotin = "|";
+           }
+           return sb.toString();
+
        }
 
       
@@ -104,11 +113,9 @@ public class Lataus {
         */
        public void parse(String rivi) {
            StringBuffer sb = new StringBuffer(rivi);
-           setTunnusNro(Mjonot.erota(sb, '|', getTunnusNro()));
-           ajoneuvoNro = Mjonot.erota(sb, '|', ajoneuvoNro);
-           kwh = Mjonot.erota(sb, '|', kwh);
-           pvm = Mjonot.erota(sb, '|', pvm);
-           kesto = Mjonot.erota(sb, '|', kesto);
+           for (int k = 0; k < getKenttia(); k++)
+               aseta(k, Mjonot.erota(sb, '|'));
+
        }
 
        
@@ -196,4 +203,108 @@ public class Lataus {
         
         }
 
+        @Override
+        public int getKenttia() {
+            // TODO Auto-generated method stub
+            return 5;
+        }
+
+        @Override
+        public int ekaKentta() {
+            // TODO Auto-generated method stub
+            return 2;
+        }
+
+        @Override
+        public String getKysymys(int k) {
+            switch (k) {
+            case 0:
+                return "id";
+            case 1:
+                return "AjoneuvoId";
+            case 2:
+                return "pvm";
+            case 3:
+                return "kWh";
+            case 4:
+                return "aika";
+            default:
+                return "???";
+        }
+
+        }
+
+        @Override
+        public String anna(int k) {
+            switch (k) {
+            case 0:
+                return "" + tunnusNro;
+            case 1:
+                return "" + ajoneuvoNro;
+            case 2:
+                return pvm;
+            case 3:
+                return "" + kwh;
+            case 4:
+                return "" + kesto;
+            default:
+                return "???";
+        }
+
+        }
+
+        @Override
+        public String aseta(int k, String s) {
+            String st = s.trim();
+            StringBuffer sb = new StringBuffer(st);
+            switch (k) {
+                case 0:
+                    setTunnusNro(Mjonot.erota(sb, '$', getTunnusNro()));
+                    return null;
+                case 1:
+                    ajoneuvoNro = Mjonot.erota(sb, '$', ajoneuvoNro);
+                    return null;
+                case 2:
+                    pvm = st;
+                    return null;
+                case 3:
+                    try {
+                        kwh = Mjonot.erotaDouble(sb, '§');
+                    } catch (NumberFormatException ex) {
+                        return "aloitusvuosi: Ei kokonaisluku ("+st+")";
+                    }
+                    return null;
+
+                case 4:
+                    try {
+                        kesto = Mjonot.erotaEx(sb, '§', kesto);
+                    } catch (NumberFormatException ex) {
+                        return "Ei kokonaisluku ("+st+")";
+                    }
+                    return null;
+
+                default:
+                    return "Väärä kentän indeksi";
+            }
+
+        }
+
+        @Override
+        public Lataus clone() throws CloneNotSupportedException {
+            return (Lataus)super.clone();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if ( obj == null ) return false;
+            return this.toString().equals(obj.toString());
+        }
+        
+
+        @Override
+        public int hashCode() {
+            return tunnusNro;
+        }
+
+        
      }

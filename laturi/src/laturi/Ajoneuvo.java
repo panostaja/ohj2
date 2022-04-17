@@ -243,14 +243,14 @@ public class Ajoneuvo  implements Cloneable, Tietue {
         return akunKoko;
     }
 
-private RekTarkistus rekisterinumerot = new RekTarkistus();
+// private RekTarkistus rekisterinumerot = new RekTarkistus();
 
 /**
  * @return kenttien lukumäärä
  */
 @Override
 public int getKenttia() {
-    return 8;
+    return 9;
 }
 
 /**
@@ -290,14 +290,7 @@ public String anna(int k) {
     }
 }
 
-/*
-    public String setRekisteriTunnus(String s) {
-        String virhe = rekisterinumerot.tarkista(s);
-        if (virhe != null) return virhe;
-        rekisteriTunnus = s;
-        return null;
-    }
-    */
+
     
     
     @Override
@@ -376,6 +369,13 @@ public String anna(int k) {
         }
     }
     
+    
+    /** 
+     * Antaa k:n kentän sisällön merkkijonona 
+     * @param k monenenko kentän sisältö palautetaan 
+     * @return kentän sisältö merkkijonona 
+     */ 
+
     public String getAvain(int k) {
         switch ( k ) {
         case 0: return "" + tunnusNro;
@@ -392,13 +392,14 @@ public String anna(int k) {
     }
 
 
-  /*
+  /**
    * Luokka joka osaa verrata kahta ajoneuvoa
    */
     public static class Vertailija implements Comparator<Ajoneuvo> {
        private int k;
        
-       public Vertailija(int k) {
+       @SuppressWarnings("javadoc")
+    public Vertailija(int k) {
            this.k = k;
        }
 

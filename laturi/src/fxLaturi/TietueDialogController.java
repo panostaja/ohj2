@@ -74,9 +74,8 @@ public class TietueDialogController<TYPE extends Tietue> implements ModalControl
      * Näytetään ajoneuvon tiedor Textfield komponetteihin
      * @param edits taulukko jossa tekstikentät
      * @param tietue näytettävä tietue
-   
-     */
-    public static void naytaTietue(TextField [] edits, Tietue tietue) {
+    */
+    public static void naytaTietue(@SuppressWarnings("hiding") TextField[] edits, Tietue tietue) {
         if (tietue == null) return;
         for (int k = tietue.ekaKentta(); k < tietue.getKenttia(); k++) {
             edits[k].setText(tietue.anna(k));
@@ -110,6 +109,11 @@ public class TietueDialogController<TYPE extends Tietue> implements ModalControl
         
     }
     
+    
+    /**
+     * Tekee tarvittavat muut alustukset, nyt vaihdetaan GridPanen tilalle
+     * yksi iso tekstikenttä, johon voidaan tulostaa tietueen tiedot.
+     */
     public void alusta () {
         edits =luoKentat(gridTietue, tietueKohdalla);
         for (TextField edit : edits)
@@ -120,9 +124,15 @@ public class TietueDialogController<TYPE extends Tietue> implements ModalControl
 
     
     
-    
-    public static<TYPE extends Tietue> TextField[] luoKentat(GridPane gridTietue, TYPE aputietue) {
+    /**
+     * Luodaan GridPaneen tietueen tiedot
+     * @param gridTietue mihin tiedot luodaan
+     * @param aputietue malli josta tiedot otetaan
+     * @return luodut tekstikentät
+     */
+  public static<TYPE extends Tietue> TextField[] luoKentat(GridPane gridTietue, TYPE aputietue) {
         gridTietue.getChildren().clear();
+        @SuppressWarnings("hiding")
         TextField[] edits = new TextField[aputietue.getKenttia()];
         
         for (int i=0, k = aputietue.ekaKentta(); k < aputietue.getKenttia(); k++, i++) {

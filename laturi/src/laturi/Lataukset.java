@@ -46,6 +46,7 @@ public class Lataukset implements Iterable<Lataus> {
      */
     public void lisaa(Lataus lat) {
         alkiot.add(lat);
+        muutettu = true;
     }
 
 
@@ -64,7 +65,11 @@ public class Lataukset implements Iterable<Lataus> {
         }
         lisaa(lataus);
     }
-
+/**
+ * 
+ * @param lataus poistettava lataus
+ * @return palattaa onko poistettu
+ */
     public boolean poista(Lataus lataus) {
         boolean ret = alkiot.remove(lataus);
         if (ret) muutettu = true;
@@ -72,6 +77,10 @@ public class Lataukset implements Iterable<Lataus> {
     }
     
     
+    /**
+     * @param tunnusNro  käsiteltävän ajoneuvon tunnusnumero
+     * @return palauttaa poistettujen latausten lukumäärän
+     */
     public int poistaAjoneuvonLataukset(int tunnusNro) {
         int n = 0;
         for (Iterator<Lataus> it = alkiot.iterator(); it.hasNext();) {

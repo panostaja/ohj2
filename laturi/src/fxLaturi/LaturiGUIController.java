@@ -16,12 +16,14 @@ import fi.jyu.mit.fxgui.Dialogs;
 import fi.jyu.mit.fxgui.ListChooser;
 import fi.jyu.mit.fxgui.ModalController;
 import fi.jyu.mit.fxgui.StringGrid;
+import fi.jyu.mit.fxgui.TextAreaOutputStream;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
@@ -78,7 +80,9 @@ public class LaturiGUIController implements Initializable {
     
     
     @FXML private void handleTulosta() {
-        TulostusController.tulosta(null); 
+        TulostusController tulostusCtrl = TulostusController.tulosta(null); 
+        tulostaValitut(tulostusCtrl.getTextArea()); 
+
     }
     
     
@@ -189,7 +193,9 @@ public class LaturiGUIController implements Initializable {
     
     
     
-    private void naytaVirhe(String virhe) {
+  /* Ei käytetä vielä
+   * 
+   *  private void naytaVirhe(String virhe) {
         if ( virhe == null || virhe.isEmpty() ) {
             labelVirhe.setText("");
             labelVirhe.getStyleClass().removeAll("virhe");
@@ -198,7 +204,7 @@ public class LaturiGUIController implements Initializable {
         labelVirhe.setText(virhe);
         labelVirhe.getStyleClass().add("virhe");
     }
-
+*/
     
     private void setTitle(String title) {
         ModalController.getStage(hakuehto).setTitle(title);
@@ -302,16 +308,20 @@ public class LaturiGUIController implements Initializable {
     }
 
 
-    @SuppressWarnings("unused")  //TODO: otetaan myöhemmin käyttöön
-    private void tulosta(PrintStream os, Ajoneuvo ajoneuvo) {
-        os.println("---------------------------------------------------");
+    /**
+     * Tulostaa ajoneuvon tiedot
+     * @param os tietovirta johon tulostetaan
+     * @param ajoneuvo tulostettava ajoneuvo
+     */
+    public void tulosta(PrintStream os, final Ajoneuvo ajoneuvo) {
+        os.println("----------------------------------------------");
         ajoneuvo.tulosta(os);
-        os.println("---------------------------------------------------");
+        os.println("----------------------------------------------");
         List<Lataus> lataukset = laturi.annaLataukset(ajoneuvo);
-        for (Lataus lat: lataukset) 
-            lat.tulosta(os);
-        os.println("---------------------------------------------------");
+        for (Lataus lat:lataukset) 
+            lat.tulosta(os);      
     }
+
    
     
     /**
@@ -465,18 +475,19 @@ public class LaturiGUIController implements Initializable {
     /**
      * Tulostaa listassa olevat ajoneuvot tekstialueeseen
      * @param text alue johon tulostetaan
-    
+    */
     public void tulostaValitut(TextArea text) {
         try (PrintStream os = TextAreaOutputStream.getTextPrintStream(text)) {
             os.println("Tulostetaan kaikki ajoneuvot");
-            for (int i = 0; i < laturi.getAjoneuvoja(); i++) {
-                Ajoneuvo ajoneuvo = laturi.annaAjoneuvo(i);
+            for (Ajoneuvo ajoneuvo: chooserAjoneuvot.getObjects()) { 
                 tulosta(os, ajoneuvo);
                 os.println("\n\n");
             }
+
         }
     }
- */
+ 
+     
     //------
     // loput käyttöliittymästä joita ei vielä toteutettu 
     /**

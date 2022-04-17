@@ -69,6 +69,7 @@ public class Ajoneuvot {
         if (lkm >= alkiot.length) alkiot = Arrays.copyOf(alkiot, lkm+20);
         this.alkiot[this.lkm] = ajoneuvo;
         lkm++;
+        muutettu = true;
     }
 
     /**
@@ -247,12 +248,20 @@ public class Ajoneuvot {
        
     }
 
+    /**
+     * @param id etsittävä id   
+     * @return palauttaa indeksin tai -1 jos ei löydy
+     */
     public int etsiId(int id) { 
         for (int i = 0; i < lkm; i++) 
             if (id == alkiot[i].getTunnusNro()) return i; 
         return -1; 
     }
     
+    /**
+     * @param id poistettava id
+     * @return palauttaa 0 jos rakenne tyhjä, muuten yksi jos poisto onnistui
+     */
     public int poista(int id) { 
         int ind = etsiId(id); 
         if (ind < 0) return 0; 

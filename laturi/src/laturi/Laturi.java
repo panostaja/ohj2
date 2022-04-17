@@ -79,6 +79,11 @@ public class Laturi {
         lataukset.lisaa(lat);
     }
 
+    /**
+     * poistaa ajoneuvon ja sen lataukset
+     * @param ajoneuvo poistettava ajoneuvo
+     * @return ajoneuvon id
+     */
     public int poista(Ajoneuvo ajoneuvo) {
         if ( ajoneuvo == null ) return 0;
         int ret = ajoneuvot.poista(ajoneuvo.getTunnusNro()); 
@@ -86,6 +91,10 @@ public class Laturi {
         return ret; 
     }
     
+    /**poistaa yksittäisen latauksen
+     * @param lataus poistettava lataus
+     * 
+     */
     public void poistaLataus(Lataus lataus) { 
         lataukset.poista(lataus); 
     } 

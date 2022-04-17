@@ -3,10 +3,9 @@ package fxLaturi;
 import fi.jyu.mit.fxgui.ModalController;
 import fi.jyu.mit.fxgui.ModalControllerInterface;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+import javafx.print.PrinterJob;
+import javafx.scene.web.WebEngine;
 import javafx.scene.control.TextArea;
-import fi.jyu.mit.fxgui.Dialogs;
 
 /**
  * Tulostuksen hoitava luokka
@@ -23,7 +22,14 @@ public class TulostusController implements ModalControllerInterface<String> {
 
     
     @FXML private void handleTulosta() {
-        Dialogs.showMessageDialog("Ei osata vielä tulostaa");
+        PrinterJob job = PrinterJob.createPrinterJob();
+        if ( job != null && job.showPrintDialog(null) ) {
+            WebEngine webEngine = new WebEngine();
+            webEngine.loadContent("<pre>" + tulostusAlue.getText() + "</pre>");
+            webEngine.print(job);
+            job.endJob();
+        }
+
     }
 
     

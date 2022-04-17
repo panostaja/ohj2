@@ -34,8 +34,8 @@ import laturi.SailoException;
  * Luokka laturin käyttöliittymän tapahtumien hoitamiseksi.
  * 
  * @author plammi
- * @version 1.3.2022
- * version htv6
+ * @version 17.4.2022
+ * version htv7
  */
 public class LaturiGUIController implements Initializable {
     
@@ -89,7 +89,7 @@ public class LaturiGUIController implements Initializable {
 
    
   @FXML private void handleUusiAjoneuvo() {
-      // ModalController.showModal(LaturiGUIController.class.getResource("UusiAjoneuvoGUIView.fxml"), "Ajoneuvo", null, "");
+      
       uusiAjoneuvo();    
    }
    
@@ -100,7 +100,7 @@ public class LaturiGUIController implements Initializable {
    
  
   @FXML private void handlePoistaAjoneuvo() {
-      Dialogs.showMessageDialog("Ei osata vielä poistaa ajoneuvoa");
+      poistaAjoneuvo();
   }
   
   
@@ -117,7 +117,7 @@ public class LaturiGUIController implements Initializable {
 
 
 @FXML private void handlePoistaLataus() {
-      Dialogs.showMessageDialog("Ei osata vielä poistaa latausta");
+      poistaLataus();
  }
   
   
@@ -431,9 +431,31 @@ public class LaturiGUIController implements Initializable {
         }
     }
 
-    
+    private void poistaLataus() {
+        Ajoneuvo ajoneuvoKohdalla = chooserAjoneuvot.getSelectedObject(); 
+        int rivi = tableLataukset.getRowNr();
+        if ( rivi < 0 ) return;
+        Lataus lataus = tableLataukset.getObject();
+        if ( lataus == null ) return;
+        laturi.poistaLataus(lataus);
+        naytaLataukset(ajoneuvoKohdalla);
+        int latauksia = tableLataukset.getItems().size(); 
+        if ( rivi >= latauksia ) rivi = latauksia -1;
+        tableLataukset.getFocusModel().focus(rivi);
+        tableLataukset.getSelectionModel().select(rivi);
+  }
 
-    
+    private void poistaAjoneuvo() {
+        Ajoneuvo ajoneuvoKohdalla = chooserAjoneuvot.getSelectedObject(); 
+        Ajoneuvo ajoneuvo = ajoneuvoKohdalla;
+        if ( ajoneuvo == null ) return;
+        if ( !Dialogs.showQuestionDialog("Poisto", "Poistetaanko ajoneuvo: " + ajoneuvo.getRekisteriTunnus(), "Kyllä", "Ei") )
+            return;
+        laturi.poista(ajoneuvo);
+        int index = chooserAjoneuvot.getSelectedIndex();
+        hae(0);
+        chooserAjoneuvot.setSelectedIndex(index);
+    }
 
    
     
@@ -456,7 +478,7 @@ public class LaturiGUIController implements Initializable {
     }
  */
     //------
-    // loput käyttöliittymästä   
+    // loput käyttöliittymästä joita ei vielä toteutettu 
     /**
      * Yleisraportti
      */

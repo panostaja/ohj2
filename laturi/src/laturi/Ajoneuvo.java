@@ -290,14 +290,14 @@ public String anna(int k) {
     }
 }
 
-
+/*
     public String setRekisteriTunnus(String s) {
         String virhe = rekisterinumerot.tarkista(s);
         if (virhe != null) return virhe;
         rekisteriTunnus = s;
         return null;
     }
-    
+    */
     
     
     @Override

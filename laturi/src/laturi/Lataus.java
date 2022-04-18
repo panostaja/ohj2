@@ -9,7 +9,7 @@ import kanta.Tietue;
 
 /**
  * @author panos
- * @version 26.2.2022
+ * @version 18.4.2022
       * |------------------------------------------------------------------------|
       * | Luokan nimi:   Lataus                              | Avustajat:        |
       * |-------------------------------------------------------------------------
@@ -253,6 +253,8 @@ public class Lataus implements Cloneable, Tietue {
 
         }
 
+        
+        
         @Override
         public String aseta(int k, String s) {
             String st = s.trim();

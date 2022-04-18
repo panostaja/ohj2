@@ -38,6 +38,10 @@ import laturi.SailoException;
  * @author plammi
  * @version 17.4.2022
  * version htv7
+ * 
+ * EI toimi vielä: raportointi
+ * 
+ * 
  */
 public class LaturiGUIController implements Initializable {
     

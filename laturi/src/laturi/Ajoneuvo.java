@@ -310,22 +310,13 @@ public String anna(int k) {
     }
 
     /**
-     * TOOO: korjaa testit  
+     *
      * 
      * Asettaa k:n kentän arvoksi parametrina tuodun merkkijonon arvon
      * @param k kuinka monennen kentän arvo asetetaan
      * @param jono jonoa joka asetetaan kentän arvoksi
      * @return null jos asettaminen onnistuu, muuten vastaava virheilmoitus.
      * @example
-     * <pre name="test">
-     *   Jasen jasen = new Jasen();
-     *   jasen.aseta(1,"Ankka Aku") === null;
-     *   jasen.aseta(2,"kissa") =R= "Hetu liian lyhyt"
-     *   jasen.aseta(2,"030201-1111") === "Tarkistusmerkin kuuluisi olla C"; 
-     *   jasen.aseta(2,"030201-111C") === null; 
-     *   jasen.aseta(9,"kissa") === "Liittymisvuosi väärin jono = \"kissa\"";
-     *   jasen.aseta(9,"1940") === null;
-     * </pre>
      */
    // @Override
     @Override

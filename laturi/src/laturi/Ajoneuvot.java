@@ -26,7 +26,7 @@ import fi.jyu.mit.ohj2.WildChars;
  * |                                                    |                   |
  * |-------------------------------------------------------------------------
  * @author panos
- * @version 19.2.2022
+ * @version 18.4.2022
  *
  */
 public class Ajoneuvot {

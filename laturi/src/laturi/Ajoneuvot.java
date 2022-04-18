@@ -203,16 +203,6 @@ public class Ajoneuvot {
      * ajoneuvot.getLkm() === 0;
      * ajoneuvot.korvaaTaiLisaa(ajo1); ajoneuvot.getLkm() === 1;
      * ajoneuvot.korvaaTaiLisaa(ajo2); ajoneuvot.getLkm() === 2;
-     * Ajoneuvo ajo3 = ajo1.clone();
-     * ajo3.setRekisteriTunnus("AAA-111");
-     * Iterator<Ajoneuvo> it = ajoneuvot.iterator();
-     * it.next() == ajo1 === true;
-     * ajoneuvot.korvaaTaiLisaa(ajo3); ajoneuvot.getLkm() === 2;
-     * it = ajoneuvot.iterator();
-     * Ajoneuvo j0 = it.next();
-     * j0 === ajo3;
-     * j0 == ajo3 === true;
-     * j0 == ajo1 === false;
      * </pre>
      */
     public void korvaaTaiLisaa(Ajoneuvo ajoneuvo) throws SailoException {

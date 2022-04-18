@@ -63,8 +63,8 @@ public class Lataus implements Cloneable, Tietue {
         * @example
         * <pre name="test">
         *   Lataus lataus = new Lataus();
-        *   lataus.parse("   3   |  2  |   8.9  | 15.1.2020 | 20 ");
-        *   lataus.toString()    === "3|2|8.9|15.1.2020|20";
+        *   lataus.parse("   3   |  2  |   8.9  | 15.1 | 20 ");
+        *   lataus.toString()    === "3|2|8.9|15.1|20";
         * </pre>
         */
        @Override
@@ -99,16 +99,9 @@ public class Lataus implements Cloneable, Tietue {
         * @example
         * <pre name="test">
         *   Lataus lataus = new Lataus();
-        *   lataus.parse("   3   |  2  |   8.9  | 15.1.2020 | 20 ");
+        *   lataus.parse("   3   |  2  |   8.9  | 15.1 | 20 ");
         *   lataus.getAjoneuvoNro() === 2;
-        *   lataus.toString()    === "3|2|8.9|15.1.2020|20";
-        *   
-        *   lataus.rekisteroi();
-        *   int n = lataus.getTunnusNro();
-        *   lataus.parse(""+(n+20));
-        *   lataus.rekisteroi();
-        *   lataus.getTunnusNro() === n+20+1;
-        *   lataus.toString()     === "" + (n+20+1) + "|2|8.9|15.1.2020|20";
+        *   lataus.toString()    === "3|2|8.9|15.1|20";
         * </pre>
         */
        public void parse(String rivi) {
